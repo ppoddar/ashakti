@@ -6,6 +6,10 @@ import android.graphics.Typeface;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -16,8 +20,6 @@ import java.util.List;
  * The application class holds immutable, global state.
  */
 public class ShaktiApplication extends Application {
-    //private static final List<String> audioFiles = new ArrayList<>();
-    //private static final String audioFilePath = "";
     private List<String> englishPoems;
     private List<String> bengaliPoems;
     private List<String> audioFiles;
@@ -35,9 +37,17 @@ public class ShaktiApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        englishPoems = createTOC(getResources().getStringArray(R.array.english_poems_toc), true);
-        bengaliPoems = createTOC(getResources().getStringArray(R.array.bengali_poems_toc), true);
-        audioFiles   = createTOC(getResources().getStringArray(R.array.audio_files), false);
+
+        englishPoems = createTOC(
+                getResources().getString(R.string.content_english_path),
+                getResources().getStringArray(R.array.english_poems_toc), true);
+        bengaliPoems = createTOC(getResources().getString(R.string.content_bengali_path),
+                getResources().getStringArray(R.array.bengali_poems_toc), true);
+        audioFiles = createTOC(getResources().getString(R.string.audio_path),
+                getResources().getStringArray(R.array.audio_files), false);
+        if (englishPoems.size() != bengaliPoems.size()) {
+            throw new IllegalArgumentException("english poems " + englishPoems.size() + " != bengali poems " + bengaliPoems.size());
+        }
 
         bengaliFont = Typeface.createFromAsset(getAssets(), "font/kalpurush.ttf");
         englishFont = Typeface.DEFAULT;
@@ -52,27 +62,32 @@ public class ShaktiApplication extends Application {
     /**
      * reads the content of each raw resource.
      * For empty names, a null entry is added to returned list
-     * @param rsrcNames
-     * @param readContent if true reads the content, else just the anme
+     *
+     * @param dir         base directory of the content files
+     * @param rsrcNames   names of the content files
+     * @param readContent if true reads the content file, else just cache the name
      * @return a list that may contain null
      */
-    List<String> createTOC(String[] rsrcNames, boolean readContent) {
+    List<String> createTOC(String dir, String[] rsrcNames, boolean readContent) {
         List<String> list = new ArrayList<>();
         for (String rsrcName : rsrcNames) {
+            String fileName = dir + '/' + rsrcName;
             if (readContent) {
-                Log.e("SHAKTI", "get resource id for " + rsrcName);
-                int rsrcId = getResources().getIdentifier(rsrcName, "raw", getPackageName());
                 try {
-                    InputStream in = getResources().openRawResource(rsrcId);
-                    Log.e("SHAKTI", "read raw resource " + rsrcName);
+                    InputStream in = getAssets().open(fileName);
+                    Log.e("SHAKTI", "open asset " + fileName);
                     list.add(readFileContent(in));
                 } catch (Exception ex) {
-                    Log.e("SHAKTI", "can not read resource " + rsrcName + " due to " + ex.getMessage());
-                    //ex.printStackTrace();
+                    Log.e("SHAKTI", "can not read asset " + fileName + " due to " + ex.getMessage());
+                    list.add(null);
                 }
             } else {
-                Log.e("SHAKTI", "add raw resource " + rsrcName);
-                list.add(rsrcName);
+                if (rsrcName == null || rsrcName.isEmpty()) {
+                    list.add(null);
+                } else {
+                    Log.e("SHAKTI", "add asset (not read) " + fileName);
+                    list.add(fileName);
+                }
             }
         }
         return list;
@@ -118,15 +133,47 @@ public class ShaktiApplication extends Application {
     }
 
     /**
-     * gets the name of a audio file at given cursor.
+     * gets the file descriptor of a audio file at given cursor.
+     *
      * @param cursor a index
      * @return null if audio file name is empty
      */
-    public String getAudio(int cursor) {
+    public FileDescriptor getAudioStream(int cursor) {
         String fileName = audioFiles.get(cursor);
-        return fileName == null || fileName.isEmpty() ? null : fileName;
+        if (fileName == null) {
+            Log.e("SHAKTI", "no audio file at cursor " + cursor);
+            return null;
+        }
+        try {
+            InputStream in = getAssets().open(fileName);
+            if (in == null) {
+                Log.e("SHAKTI", "no stream for audio file  " + fileName);
+                return null;
+            }
+            Log.e("SHAKTI", "reading audio stream " + fileName);
+            File tmpFile = File.createTempFile("audio", "mp3", null);
+            FileOutputStream out = new FileOutputStream(tmpFile);
+            int ch;
+            while ((ch = in.read()) != -1) {
+                out.write(ch);
+            }
+            in.close();
+            out.close();
+
+            FileInputStream fis = new FileInputStream(tmpFile);
+            return fis.getFD();
+        } catch (Exception ex) {
+            Log.e("SHAKTI", "error reading audio stream " + fileName);
+            ex.printStackTrace();
+            return null;
+        }
     }
 
+    /**
+     * get the font for given language
+     * @param lang language
+     * @return a Typeface
+     */
     public Typeface getFont(Language lang) {
         switch (lang) {
             case ENGLISH:
@@ -136,6 +183,4 @@ public class ShaktiApplication extends Application {
         }
         return null;
     }
-
-
 }

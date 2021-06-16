@@ -9,15 +9,21 @@
 
     <include layout="@layout/main_toolbar"/>
 
-    <TextView
-        android:id="@+id/text_content"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/main_toolbar"
-        android:scrollbars="vertical"
-        android:padding="20dp"/>
+        android:layout_marginTop="?attr/actionBarSize"
+        android:padding="20dp"
+        android:fillViewport="true">
+        <TextView
+            android:id="@+id/text_content"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:fontFamily="RobotoTextViewStyle"/>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

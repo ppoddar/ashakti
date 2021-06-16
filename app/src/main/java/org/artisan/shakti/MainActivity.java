@@ -1,23 +1,16 @@
 package org.artisan.shakti;
 
 import android.annotation.SuppressLint;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import java.io.File;
-import java.util.Objects;
+import java.io.FileDescriptor;
 
 /**
  * This activity displays content in two languages.
@@ -38,8 +31,7 @@ public class MainActivity extends AppCompatActivity {
         setToolbar();
 
         textView = findViewById(R.id.text_content);
-        textView.setMovementMethod(new ScrollingMovementMethod());
-        //textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f);
+        //textView.setMovementMethod(new ScrollingMovementMethod());
 
         cursor = 0;
         lang = Language.ENGLISH;
@@ -56,13 +48,30 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @SuppressLint("NonConstantResourceId")
     void setToolbar() {
         Toolbar toolbar = findViewById(R.id.main_toolbar);
-        if (toolbar == null) return;
-        setSupportActionBar(toolbar);
-        toolbar.showOverflowMenu();
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        toolbar.inflateMenu(R.menu.main_menu);
+        toolbar.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.action_table_of_content:
+                    break;
+                case R.id.action_switch_language:
+                    switchPoem();
+                    break;
+                case R.id.action_play_audio:
+                    new Thread(this::playAudio).start();
+                    break;
+                case R.id.action_pause_audio:
+                    pauseAudio();
+                    break;
+                case R.id.action_stop_audio:
+                    stopAudio();
+                    break;
+            }
+            return false;
+        });
+
     }
 
 
@@ -104,46 +113,13 @@ public class MainActivity extends AppCompatActivity {
         showPoem(true);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        new MenuInflater(this)
-                .inflate(R.menu.main_menu, menu);
-        super.onCreateOptionsMenu(menu);
-        // IMPORTANT
-        return true;
-    }
-
-    @SuppressLint("NonConstantResourceId")
-    @Override
-    public boolean onOptionsItemSelected(MenuItem menu) {
-        switch (menu.getItemId()) {
-            case R.id.action_table_of_content:
-                break;
-            case R.id.action_switch_language:
-                switchPoem();
-                break;
-            case R.id.action_play_audio:
-                playAudio();
-                break;
-            case R.id.action_pause_audio:
-                pauseAudio();
-                break;
-            case R.id.action_stop_audio:
-                stopAudio();
-                break;
-        }
-        return true;
-    }
-
     void playAudio() {
         try {
             ShaktiApplication app = ((ShaktiApplication)getApplication());
-            String audioFile = app.getAudio(cursor);
-            if (audioFile == null) return;
-            Uri audio = Uri.fromFile(new File(audioFile));
+            FileDescriptor audio = app.getAudioStream(cursor);
+            if (audio == null) return;
             Log.e("SHAKTI", "playing " + audio);
-            mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            mp.setDataSource(app, audio);
+            mp.setDataSource(audio);
             mp.prepare();
             mp.start();
         } catch (Exception e) {
