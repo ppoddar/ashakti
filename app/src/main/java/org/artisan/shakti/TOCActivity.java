@@ -24,14 +24,11 @@ public class TOCActivity extends AppCompatActivity {
         setToolbar();
         ShaktiApplication app = (ShaktiApplication) getApplication();
         Language language = app.getCurrentLanguage();
-        Log.e(ACTIVITY, "showing TOC in " + language);
-        String[] toc = language == Language.ENGLISH
-                ? getResources().getStringArray(R.array.english_poem_toc)
-                : getResources().getStringArray(R.array.bengali_poem_toc);
-
-        int index = 0;
-        for (String title : toc) {
-            addTOCEntry(app, title, index++);
+        Log.e(ACTIVITY, "showing TOC");
+        for (int i = 0; i < app.getPoemCount(); i++) {
+            addTOCEntry(app,
+                    app.getPoemTitle(Language.ENGLISH, i),
+                    app.getPoemTitle(Language.BENGALI, i), i);
         }
     }
 
@@ -45,34 +42,49 @@ public class TOCActivity extends AppCompatActivity {
      * adds a TOC entry.
      *
      * @param app   a context
-     * @param title a title
+     * @param title1 a title
+     * @param title2 another title
      * @param index a index of the entry
      */
-    void addTOCEntry(ShaktiApplication app, String title, final int index) {
-        Log.e(ACTIVITY, "adding toc entry " + title);
+    void addTOCEntry(final ShaktiApplication app,
+                     String title1, String title2,
+                     final int index) {
+        Log.e(ACTIVITY, "adding toc entry " + title1 + " (" + title2 + ")");
         LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        ViewGroup insertPoint = (ViewGroup) findViewById(R.id.toc_entries);
-        TextView entry = (TextView) inflater.inflate(R.layout.toc_entry_template, null);
-        entry.setText(title);
-        entry.setTypeface(app.getFont());
+        ViewGroup entries = (ViewGroup) findViewById(R.id.toc_entries);
+        ViewGroup template = (ViewGroup)inflater.inflate(R.layout.toc_entry_template, null);
+        TextView englishTitle = (TextView)template.findViewById(R.id.english_title) ;
+        TextView bengaliTitle = (TextView)template.findViewById(R.id.bengali_title) ;
+        englishTitle.setText(title1);
+        bengaliTitle.setText(title2);
 
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,   // width
                 ViewGroup.LayoutParams.WRAP_CONTENT);  // height
 
-        insertPoint.addView(entry, params);
-
+        entries.addView(template);
         // click on the entry will show the poem
-        entry.setOnClickListener(new View.OnClickListener() {
+        englishTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e(ACTIVITY, "clicked TOC entry " + index);
-                Intent intent = new Intent(getApplicationContext(), ShowPoemActivity.class);
-                intent.putExtra(ShaktiApplication.KEY_CURSOR, index);
-                startActivity(intent);
+                //Log.e(ACTIVITY, "clicked TOC entry " + index);
+                app.setLanguage(Language.ENGLISH);
+                showPoem(index);
             }
         });
 
+        bengaliTitle.setOnClickListener(v -> {
+            //Log.e(ACTIVITY, "clicked TOC entry " + index);
+            app.setLanguage(Language.BENGALI);
+            showPoem(index);
+        });
+
+    }
+
+    void showPoem(int index) {
+        Intent intent = new Intent(getApplicationContext(), ShowPoemActivity.class);
+        intent.putExtra(ShaktiApplication.KEY_CURSOR, index);
+        startActivity(intent);
     }
 
 

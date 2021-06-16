@@ -3,7 +3,6 @@ package org.artisan.shakti;
 import android.app.Application;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
-import android.media.MediaPlayer;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -65,15 +64,18 @@ public class ShaktiApplication extends Application
             throw new IllegalArgumentException("english poems " + englishPoems.size() + " != bengali poems " + bengaliPoems.size());
         }
 
-        bengaliFont = Typeface.createFromAsset(getAssets(), "font/kalpurush.ttf");
-        englishFont = Typeface.DEFAULT;
+        bengaliFont = getResources().getFont(R.font.kalpurush);
+        englishFont = getResources().getFont(R.font.raleway);
     }
 
     public Language getCurrentLanguage() {
         return language;
     }
 
-
+    public ShaktiApplication setLanguage(Language lang) {
+        this.language = lang;
+        return this;
+    }
     /**
      * Switches the language of the application.
      * @return the current language
@@ -232,5 +234,13 @@ public class ShaktiApplication extends Application
         return cursor >= 0 && cursor < getPoemCount();
     }
 
-
+    public String getPoemTitle(Language lang, int index) {
+        String[] toc = new String[0];
+        if (lang == Language.BENGALI) {
+            toc = getResources().getStringArray(R.array.bengali_poem_toc);
+        } else {
+            toc = getResources().getStringArray(R.array.english_poem_toc);
+        }
+        return toc[index];
+    }
 }
