@@ -17,15 +17,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The application class holds immutable, global state.
+ * The application class holds immutable list of document
+ * in two languages.
+ * The list of document files is available as assets.
+ * The titles and file list are statically declared.
  */
-public class ShaktiApplication extends Application
-         {
+public class ShaktiApplication extends Application {
     private static List<String> englishPoems;
-    private static List<String> bengaliPoems;
+    private static List<String> banglaPoems;
     private static List<String> audioFiles;
     private static Language language;
-    private static Typeface bengaliFont;
+    private static Typeface banglaFont;
     private static Typeface englishFont;
 
     public static final String KEY_CURSOR = "CURSOR";
@@ -34,7 +36,7 @@ public class ShaktiApplication extends Application
     /**
      * initializes this application.
      * The application holds an immutable list of content
-     * in English and Bengali.
+     * in English and Bangla.
      * The list of file names is declared statically. This method reads
      * the file names, locates the file as a raw resource, reads
      * the file content and caches them.
@@ -47,44 +49,55 @@ public class ShaktiApplication extends Application
             Log.e(APP, "onCreate is not initializing. App has already been initialized");
             return;
         }
-        Log.e(APP,"=========================================");
+        Log.e(APP, "=========================================");
         Log.e(APP, "onCreate initializing...");
-        Log.e(APP,"=========================================");
+        Log.e(APP, "=========================================");
 
         language = Language.ENGLISH;
-
-        englishPoems = createTOC(
-                getResources().getString(R.string.content_english_path),
-                getResources().getStringArray(R.array.english_poems_toc), true);
-        bengaliPoems = createTOC(getResources().getString(R.string.content_bengali_path),
-                getResources().getStringArray(R.array.bengali_poems_toc), true);
-        audioFiles = createTOC(getResources().getString(R.string.audio_path),
+        String[] fileNames = getResources().getStringArray(R.array.poem_file_list);
+        englishPoems = createTOC(getResources().getString(R.string.english_poem_directory), fileNames, true);
+        banglaPoems  = createTOC(getResources().getString(R.string.bangla_poem_directory), fileNames, true);
+        audioFiles = createTOC(getResources().getString(R.string.audio_file_directory),
                 getResources().getStringArray(R.array.audio_files), false);
-        if (englishPoems.size() != bengaliPoems.size()) {
-            throw new IllegalArgumentException("english poems " + englishPoems.size() + " != bengali poems " + bengaliPoems.size());
+        if (englishPoems.size() != banglaPoems.size()) {
+            throw new IllegalArgumentException("english poems " + englishPoems.size() + " != bengali poems " + banglaPoems.size());
         }
-
-        bengaliFont = getResources().getFont(R.font.kalpurush);
+        if (englishPoems.size() != audioFiles.size()) {
+            throw new IllegalArgumentException("english poems " + englishPoems.size() + " != audio files " + audioFiles.size());
+        }
+        banglaFont = getResources().getFont(R.font.kalpurush);
         englishFont = getResources().getFont(R.font.raleway);
     }
 
+    /**
+     * Gets the currently active language.
+     * The currently active language determines the font.
+     *
+     * @return currently active language
+     */
     public Language getCurrentLanguage() {
         return language;
     }
 
+    /**
+     * Sets the currently active language.
+     * The currently active language determines the font.
+     */
     public ShaktiApplication setLanguage(Language lang) {
         this.language = lang;
         return this;
     }
+
     /**
      * Switches the language of the application.
+     *
      * @return the current language
      */
     public Language switchLanguage() {
         Language old = this.getCurrentLanguage();
         language = getCurrentLanguage() == Language.ENGLISH
-                ? Language.BENGALI : Language.ENGLISH;
-        Log.e(APP,"Switched language from " + old + " to " + language);
+                ? Language.BANGLA : Language.ENGLISH;
+        Log.e(APP, "Switched language from " + old + " to " + language);
         return language;
     }
 
@@ -163,8 +176,8 @@ public class ShaktiApplication extends Application
         switch (getCurrentLanguage()) {
             case ENGLISH:
                 return englishPoems.get(cursor);
-            case BENGALI:
-                return bengaliPoems.get(cursor);
+            case BANGLA:
+                return banglaPoems.get(cursor);
         }
         return null;
     }
@@ -216,8 +229,8 @@ public class ShaktiApplication extends Application
         switch (lang) {
             case ENGLISH:
                 return englishFont;
-            case BENGALI:
-                return bengaliFont;
+            case BANGLA:
+                return banglaFont;
         }
         return null;
     }
@@ -234,12 +247,18 @@ public class ShaktiApplication extends Application
         return cursor >= 0 && cursor < getPoemCount();
     }
 
+    /**
+     * gets the title of the poem.
+     * @param lang language
+     * @param index index
+     * @return a title
+     */
     public String getPoemTitle(Language lang, int index) {
-        String[] toc = new String[0];
-        if (lang == Language.BENGALI) {
-            toc = getResources().getStringArray(R.array.bengali_poem_toc);
+        String[] toc;
+        if (lang == Language.BANGLA) {
+            toc = getResources().getStringArray(R.array.bangla_poem_title_list);
         } else {
-            toc = getResources().getStringArray(R.array.english_poem_toc);
+            toc = getResources().getStringArray(R.array.english_poem_title_list);
         }
         return toc[index];
     }

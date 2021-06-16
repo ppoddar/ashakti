@@ -3,15 +3,12 @@ package org.artisan.shakti;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-/**
- * This activity displays content in two languages.
- * The list of content is available as HTML files.
- * The file names are statically declared.
- */
+
 public class MainActivity extends AppCompatActivity {
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -20,12 +17,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setToolbar();
 
-//        LinearLayout layout = findViewById(R.id.main_activity_layout);
-//        layout.setOnClickListener(v -> {
-//            Intent intent = new Intent(getApplicationContext(),
-//                    ShowPoemActivity.class);
-//            startActivity(intent);
-//        });
+        LinearLayout layout = findViewById(R.id.main_activity_layout);
+        layout.setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {
+            public void onSwipeLeft() {
+                showPoem();
+            }
+            public void onSwipeRight() {
+                showPoem();
+            }
+        });
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -40,5 +40,10 @@ public class MainActivity extends AppCompatActivity {
             }
             return true;
         });
+    }
+
+    void showPoem() {
+        Intent intent = new Intent(getApplicationContext(), ShowPoemActivity.class);
+        startActivity(intent);
     }
 }

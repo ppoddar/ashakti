@@ -14,7 +14,9 @@ import androidx.appcompat.widget.Toolbar;
 import java.io.FileDescriptor;
 
 /**
- * Shows a poem in a language.
+ * This activity displays content in two languages.
+ * The list of content is available as HTML files.
+ * The file names are statically declared.
  */
 public class ShowPoemActivity extends AppCompatActivity
         implements MediaPlayer.OnPreparedListener {

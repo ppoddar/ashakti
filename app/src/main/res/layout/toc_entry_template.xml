@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/toc_entry_template"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:layout_gravity="center_horizontal"
-    android:gravity="center_horizontal">
+    android:orientation="vertical"
+    android:layout_gravity="left"
+    android:gravity="left"
+    android:paddingTop="40dp">
 
     <TextView
         android:id="@+id/english_title"
@@ -15,18 +15,19 @@
         android:layout_height="wrap_content"
         android:textColor="@color/color_0"
         android:fontFamily="@string/english_font"
-        android:gravity="center_horizontal"
+        android:gravity="left"
         android:textSize="16sp"
     />
     <TextView
-        android:id="@+id/bengali_title"
+        android:id="@+id/bangla_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/color_0"
-        android:layout_marginLeft="20dp"
-        android:gravity="center_horizontal"
+        android:layout_marginLeft="32dp"
+        android:gravity="left"
         android:textSize="16sp"
-        android:fontFamily="@string/bengali_font"/>
-
+        android:textColorLink="@color/color_1"
+        android:textColorHint="@color/color_1"
+        android:fontFamily="@string/bangla_font"/>
 
 </LinearLayout>
