@@ -6,6 +6,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,10 +32,12 @@ public class ShowPoemActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         Log.e(ACTIVITY, "onCreate");
         setContentView(R.layout.activity_show_poem);
-        setToolbar();
 
         ShaktiApplication app = (ShaktiApplication)getApplication();
         cursor = getIntent().getIntExtra(ShaktiApplication.KEY_CURSOR, 0);
+
+        setToolbar();
+
 
         textView = findViewById(R.id.text_content);
         textView.setTypeface(app.getFont());
@@ -64,13 +67,23 @@ public class ShowPoemActivity extends AppCompatActivity
             }
         });
 
+
         showPoem(false);
     }
 
     @SuppressLint("NonConstantResourceId")
     void setToolbar() {
-        Toolbar toolbar = findViewById(R.id.main_toolbar);
+        final Toolbar toolbar = findViewById(R.id.main_toolbar);
         toolbar.inflateMenu(R.menu.main_menu);
+        ShaktiApplication app = (ShaktiApplication)getApplication();
+        boolean hasAudio = app.hasAudio(cursor);
+        if (!hasAudio)
+            Log.e(ACTIVITY, "making audio play invisible for poem at " + cursor + app.getPoemTitle(Language.ENGLISH, cursor));
+        toolbar.findViewById(R.id.action_play_audio).setEnabled(hasAudio);
+        if (!hasAudio) toolbar.findViewById(R.id.action_play_audio).setVisibility(View.INVISIBLE);
+        toolbar.findViewById(R.id.action_pause_audio).setVisibility(View.INVISIBLE);
+        toolbar.findViewById(R.id.action_stop_audio).setVisibility(View.INVISIBLE);
+
         toolbar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.action_table_of_content:
@@ -81,12 +94,31 @@ public class ShowPoemActivity extends AppCompatActivity
                     switchPoem();
                     break;
                 case R.id.action_play_audio:
+                    findViewById(R.id.progress_bar).setVisibility(View.VISIBLE);
+                    toolbar.findViewById(R.id.action_play_audio).setEnabled(false);
+                    toolbar.findViewById(R.id.action_pause_audio).setEnabled(true);
+                    toolbar.findViewById(R.id.action_pause_audio).setVisibility(View.VISIBLE);
+                    toolbar.findViewById(R.id.action_stop_audio).setEnabled(true);
+                    toolbar.findViewById(R.id.action_stop_audio).setVisibility(View.VISIBLE);
+
                     new Thread(this::playAudio).start();
                     break;
                 case R.id.action_pause_audio:
+                    toolbar.findViewById(R.id.action_play_audio).setEnabled(true);
+                    toolbar.findViewById(R.id.action_play_audio).setVisibility(View.VISIBLE);
+                    toolbar.findViewById(R.id.action_pause_audio).setEnabled(false);
+                    toolbar.findViewById(R.id.action_pause_audio).setVisibility(View.INVISIBLE);
+                    toolbar.findViewById(R.id.action_stop_audio).setEnabled(true);
+                    toolbar.findViewById(R.id.action_stop_audio).setVisibility(View.VISIBLE);
                     pauseAudio();
                     break;
                 case R.id.action_stop_audio:
+                    toolbar.findViewById(R.id.action_play_audio).setEnabled(true);
+                    toolbar.findViewById(R.id.action_play_audio).setVisibility(View.VISIBLE);
+                    toolbar.findViewById(R.id.action_pause_audio).setEnabled(false);
+                    toolbar.findViewById(R.id.action_pause_audio).setVisibility(View.INVISIBLE);
+                    toolbar.findViewById(R.id.action_stop_audio).setEnabled(false);
+                    toolbar.findViewById(R.id.action_stop_audio).setVisibility(View.INVISIBLE);
                     stopAudio();
                     break;
             }
@@ -187,6 +219,7 @@ public class ShowPoemActivity extends AppCompatActivity
     @Override
     public void onPrepared(MediaPlayer mp) {
         mp.start();
+        findViewById(R.id.progress_bar).setVisibility(View.GONE);
     }
 
 }

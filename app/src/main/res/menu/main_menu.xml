@@ -34,13 +34,14 @@
         android:id="@+id/action_pause_audio"
         android:title="@string/action_pause_audio"
         android:icon="@drawable/pause_audio"
-        app:showAsAction="ifRoom">
+        app:showAsAction="always">
     </item>
+
     <item
         android:id="@+id/action_stop_audio"
         android:title="@string/action_stop_audio"
         android:icon="@drawable/stop_audio"
-        app:showAsAction="ifRoom">
+        app:showAsAction="always">
     </item>
 
 </menu>

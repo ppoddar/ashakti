@@ -123,17 +123,17 @@ public class ShaktiApplication extends Application {
             if (readContent) {
                 try {
                     InputStream in = getAssets().open(fileName);
-                    Log.e("SHAKTI", "open asset " + fileName);
+                    Log.e(APP, "open asset " + fileName);
                     list.add(readFileContent(in));
                 } catch (Exception ex) {
-                    Log.e("SHAKTI", "can not read asset " + fileName + " due to " + ex.getMessage());
+                    Log.e(APP, "can not read asset " + fileName + " due to " + ex.getMessage());
                     list.add(null);
                 }
             } else {
                 if (rsrcName == null || rsrcName.isEmpty()) {
                     list.add(null);
                 } else {
-                    Log.e("SHAKTI", "add asset (not read) " + fileName);
+                    Log.e(APP, "add asset (not read) " + fileName);
                     list.add(fileName);
                 }
             }
@@ -245,6 +245,15 @@ public class ShaktiApplication extends Application {
 
     public boolean hasPoem(int cursor) {
         return cursor >= 0 && cursor < getPoemCount();
+    }
+
+    public boolean hasAudio(int cursor) {
+        if (cursor < 0) return false;
+        if (cursor > getPoemCount()-1) return false;
+        String rsrcName = audioFiles.get(cursor);
+        if (rsrcName == null || rsrcName.isEmpty()) return false;
+
+        return true;
     }
 
     /**

@@ -54,9 +54,13 @@ public class TOCActivity extends AppCompatActivity {
         ViewGroup entries = (ViewGroup) findViewById(R.id.toc_entries);
         ViewGroup template = (ViewGroup)inflater.inflate(R.layout.toc_entry_template, null);
         TextView englishTitle = (TextView)template.findViewById(R.id.english_title) ;
-        TextView bengaliTitle = (TextView)template.findViewById(R.id.bangla_title) ;
+        TextView banglaTitle = (TextView)template.findViewById(R.id.bangla_title) ;
+
         englishTitle.setText(title1);
-        bengaliTitle.setText(title2);
+        banglaTitle.setText(title2);
+        banglaTitle.setTypeface(app.getFont(Language.BANGLA));
+        englishTitle.setTypeface(app.getFont(Language.ENGLISH));
+
 
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,   // width
@@ -73,7 +77,7 @@ public class TOCActivity extends AppCompatActivity {
             }
         });
 
-        bengaliTitle.setOnClickListener(v -> {
+        banglaTitle.setOnClickListener(v -> {
             //Log.e(ACTIVITY, "clicked TOC entry " + index);
             app.setLanguage(Language.BANGLA);
             showPoem(index);
