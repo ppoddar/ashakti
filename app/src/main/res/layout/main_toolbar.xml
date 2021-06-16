@@ -1,6 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Toolbar at the top -->
+<?xml version="1.0" encoding="utf-8"?><!-- Toolbar at the top -->
 <!-- Use androidx, not support library. Required API greater than 21 -->
+
+<!-- Toolbar menu icon depends on which menu.xml is inflated -->
 <com.google.android.material.appbar.MaterialToolbar
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -10,8 +11,7 @@
     android:layout_height="?attr/actionBarSize"
     android:background="?attr/colorPrimary"
     android:elevation="4dp"
-    app:layout_constraintTop_toTopOf="parent"
     android:theme="@style/AppTheme"
-    app:title="@string/app_name"
+    app:layout_constraintTop_toTopOf="parent"
     app:navigationIcon="@drawable/logo"
-    />
+    app:title="@string/app_name" />

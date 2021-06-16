@@ -3,6 +3,7 @@ package org.artisan.shakti;
 import android.app.Application;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -19,12 +20,17 @@ import java.util.List;
 /**
  * The application class holds immutable, global state.
  */
-public class ShaktiApplication extends Application {
-    private List<String> englishPoems;
-    private List<String> bengaliPoems;
-    private List<String> audioFiles;
-    private Typeface bengaliFont;
-    private Typeface englishFont;
+public class ShaktiApplication extends Application
+         {
+    private static List<String> englishPoems;
+    private static List<String> bengaliPoems;
+    private static List<String> audioFiles;
+    private static Language language;
+    private static Typeface bengaliFont;
+    private static Typeface englishFont;
+
+    public static final String KEY_CURSOR = "CURSOR";
+    private static final String APP = ShaktiApplication.class.getSimpleName();
 
     /**
      * initializes this application.
@@ -37,6 +43,16 @@ public class ShaktiApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        boolean initialized = (language != null);
+        if (initialized) {
+            Log.e(APP, "onCreate is not initializing. App has already been initialized");
+            return;
+        }
+        Log.e(APP,"=========================================");
+        Log.e(APP, "onCreate initializing...");
+        Log.e(APP,"=========================================");
+
+        language = Language.ENGLISH;
 
         englishPoems = createTOC(
                 getResources().getString(R.string.content_english_path),
@@ -51,6 +67,23 @@ public class ShaktiApplication extends Application {
 
         bengaliFont = Typeface.createFromAsset(getAssets(), "font/kalpurush.ttf");
         englishFont = Typeface.DEFAULT;
+    }
+
+    public Language getCurrentLanguage() {
+        return language;
+    }
+
+
+    /**
+     * Switches the language of the application.
+     * @return the current language
+     */
+    public Language switchLanguage() {
+        Language old = this.getCurrentLanguage();
+        language = getCurrentLanguage() == Language.ENGLISH
+                ? Language.BENGALI : Language.ENGLISH;
+        Log.e(APP,"Switched language from " + old + " to " + language);
+        return language;
     }
 
 
@@ -90,6 +123,7 @@ public class ShaktiApplication extends Application {
                 }
             }
         }
+        Log.e(APP, "Created " + list.size() + " poems/audio from assets at " + dir);
         return list;
     }
 
@@ -115,21 +149,22 @@ public class ShaktiApplication extends Application {
     /**
      * gets the poem of given language at given cursor.
      *
-     * @param lang   language
      * @param cursor cursor
      * @return null if cursor out of range
      */
-    public String getPoem(Language lang, int cursor) {
-        if (cursor < 0 || cursor > englishPoems.size() - 1)
+    public String getPoem(int cursor) {
+        Log.e(APP, "requested poem at cursor " + cursor + " language " + getCurrentLanguage());
+        if (!hasPoem(cursor)) {
+            Log.e(APP, "requested poem at cursor " + cursor + " is out of range. There are " + getPoemCount() + " registered poems");
             return null;
-        switch (lang) {
+        }
+        switch (getCurrentLanguage()) {
             case ENGLISH:
                 return englishPoems.get(cursor);
             case BENGALI:
                 return bengaliPoems.get(cursor);
-            default:
-                return null;
         }
+        return null;
     }
 
     /**
@@ -141,16 +176,16 @@ public class ShaktiApplication extends Application {
     public FileDescriptor getAudioStream(int cursor) {
         String fileName = audioFiles.get(cursor);
         if (fileName == null) {
-            Log.e("SHAKTI", "no audio file at cursor " + cursor);
+            Log.e(APP, "no audio file at cursor " + cursor);
             return null;
         }
         try {
             InputStream in = getAssets().open(fileName);
             if (in == null) {
-                Log.e("SHAKTI", "no stream for audio file  " + fileName);
+                Log.e(APP, "no stream for audio file  " + fileName);
                 return null;
             }
-            Log.e("SHAKTI", "reading audio stream " + fileName);
+            Log.e(APP, "reading audio stream " + fileName);
             File tmpFile = File.createTempFile("audio", "mp3", null);
             FileOutputStream out = new FileOutputStream(tmpFile);
             int ch;
@@ -163,7 +198,7 @@ public class ShaktiApplication extends Application {
             FileInputStream fis = new FileInputStream(tmpFile);
             return fis.getFD();
         } catch (Exception ex) {
-            Log.e("SHAKTI", "error reading audio stream " + fileName);
+            Log.e(APP, "error reading audio stream " + fileName);
             ex.printStackTrace();
             return null;
         }
@@ -171,6 +206,7 @@ public class ShaktiApplication extends Application {
 
     /**
      * get the font for given language
+     *
      * @param lang language
      * @return a Typeface
      */
@@ -183,4 +219,18 @@ public class ShaktiApplication extends Application {
         }
         return null;
     }
+
+    public Typeface getFont() {
+        return getFont(this.language);
+    }
+
+    public int getPoemCount() {
+        return englishPoems.size();
+    }
+
+    public boolean hasPoem(int cursor) {
+        return cursor >= 0 && cursor < getPoemCount();
+    }
+
+
 }

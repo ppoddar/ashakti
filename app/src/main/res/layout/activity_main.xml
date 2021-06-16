@@ -1,29 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_activity_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:layout_gravity="center_horizontal"
     >
 
     <include layout="@layout/main_toolbar"/>
 
-    <ScrollView
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/main_toolbar"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:padding="20dp"
-        android:fillViewport="true">
-        <TextView
-            android:id="@+id/text_content"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:fontFamily="RobotoTextViewStyle"/>
-    </ScrollView>
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:src="@drawable/logo"
+        android:contentDescription="image of Shakti"
+        android:layout_gravity="center_horizontal"
+        tools:ignore="HardcodedText" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Shakti Chattopadhaya"
+        android:textSize="32sp"
+        android:paddingTop="20dp"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1933-95"
+        android:textStyle="bold"
+
+        android:layout_gravity="center_horizontal"
+        tools:ignore="HardcodedText" />
+
+</LinearLayout>
