@@ -4,7 +4,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:textColor">@color/color_0</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">@dimen/text_plain</item>
 
         <item name="android:windowBackground">@color/color_3</item>
         <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>

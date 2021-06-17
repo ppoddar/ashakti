@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="default_padding">16dp</dimen>
+    <dimen name="default_padding_large">32dp</dimen>
+    <dimen name="horizontal_gap">32dp</dimen>
+    <dimen name="vertical_gap">20dp</dimen>
+
+    <dimen name="text_h1">32sp</dimen>
+    <dimen name="text_h2">28sp</dimen>
+    <dimen name="text_h3">24sp</dimen>
+    <dimen name="text_h4">20sp</dimen>
+    <dimen name="text_h5">18sp</dimen>
+    <dimen name="text_plain">16sp</dimen>
+
+    <dimen name="button_radius">18sp</dimen>
+
+</resources>

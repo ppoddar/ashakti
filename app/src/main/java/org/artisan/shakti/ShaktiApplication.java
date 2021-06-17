@@ -3,6 +3,7 @@ package org.artisan.shakti;
 import android.app.Application;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -82,10 +83,16 @@ public class ShaktiApplication extends Application {
     /**
      * Sets the currently active language.
      * The currently active language determines the font.
+     * @param  new language to set
+     * @return true if language has really changed
      */
-    public ShaktiApplication setLanguage(Language lang) {
-        this.language = lang;
-        return this;
+    public boolean setLanguage(Language lang) {
+        if (this.language == lang) {
+            return false;
+        } else {
+            this.language = lang;
+            return true;
+        }
     }
 
     /**
@@ -182,12 +189,18 @@ public class ShaktiApplication extends Application {
         return null;
     }
 
-    /**
-     * gets the file descriptor of a audio file at given cursor.
-     *
-     * @param cursor a index
-     * @return null if audio file name is empty
-     */
+    public Uri getAudioUri(int cursor) {
+        String audioFile = audioFiles.get(cursor);
+        if (audioFile == null) return null;
+        return Uri.parse("asset:///" + audioFile);
+    }
+
+        /**
+         * gets the file descriptor of a audio file at given cursor.
+         *
+         * @param cursor a index
+         * @return null if audio file name is empty
+         */
     public FileDescriptor getAudioStream(int cursor) {
         String fileName = audioFiles.get(cursor);
         if (fileName == null) {
@@ -203,13 +216,19 @@ public class ShaktiApplication extends Application {
             Log.e(APP, "reading audio stream " + fileName);
             File tmpFile = File.createTempFile("audio", "mp3", null);
             FileOutputStream out = new FileOutputStream(tmpFile);
-            int ch;
-            while ((ch = in.read()) != -1) {
-                out.write(ch);
-            }
+            //int length = 1024;
+            //byte[] buffer = new byte[length];
+            int size = 1024;
+            byte[] buffer = new byte[size];
+            int len = 0;
+            int d = 0;
+            while ((len = in.read(buffer, 0, size)) != -1) {
+                out.write(buffer, 0, len);
+                d += len;
+            };
             in.close();
             out.close();
-
+            Log.e(APP, "audio stream " + fileName + " has " + d + " bytes");
             FileInputStream fis = new FileInputStream(tmpFile);
             return fis.getFD();
         } catch (Exception ex) {
@@ -235,7 +254,7 @@ public class ShaktiApplication extends Application {
         return null;
     }
 
-    public Typeface getFont() {
+    private Typeface getFont() {
         return getFont(this.language);
     }
 

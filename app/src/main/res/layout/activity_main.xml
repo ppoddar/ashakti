@@ -1,44 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_activity_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_centerHorizontal="true"
     tools:context=".MainActivity"
-    android:orientation="vertical"
-    android:gravity="center_horizontal"
-    android:layout_gravity="center_horizontal"
-    >
+    android:padding="@dimen/default_padding">
 
-    <include layout="@layout/main_toolbar"/>
+    <include layout="@layout/main_toolbar" />
 
     <ImageView
+        android:id="@+id/logo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:adjustViewBounds="true"
-        android:src="@drawable/logo"
         android:contentDescription="image of Shakti"
-        android:layout_gravity="center_horizontal"
-        tools:ignore="HardcodedText" />
+        android:src="@drawable/logo"
+        tools:ignore="HardcodedText"
+        android:layout_centerInParent="true"/>
 
     <TextView
+        android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Shakti Chattopadhaya"
-        android:textSize="32sp"
+        android:layout_below="@+id/logo"
+        android:layout_centerHorizontal="true"
         android:paddingTop="20dp"
+        android:text="Shakti Chattopadhay"
+        android:textSize="@dimen/text_h1"
         android:textStyle="bold"
-        android:layout_gravity="center_horizontal"
         tools:ignore="HardcodedText" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/name"
+        android:layout_centerHorizontal="true"
         android:text="1933-95"
         android:textStyle="bold"
+        tools:ignore="HardcodedText"
+         />
 
-        android:layout_gravity="center_horizontal"
-        tools:ignore="HardcodedText" />
+    <Button
+        android:id="@+id/action_start_app"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/rounded_button"
+        android:text=">"
+        android:textColor="@color/color_0"
 
-</LinearLayout>
+        tools:ignore="HardcodedText"/>
+
+</RelativeLayout>

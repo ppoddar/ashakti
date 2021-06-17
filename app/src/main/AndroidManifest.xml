@@ -13,7 +13,7 @@
 
         <activity android:name=".ShowPoemActivity"/>
         <activity android:name=".TOCActivity"/>
-        <activity android:name="org.artisan.shakti.MainActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

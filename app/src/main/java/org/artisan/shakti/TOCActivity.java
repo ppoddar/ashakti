@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,15 +58,10 @@ public class TOCActivity extends AppCompatActivity {
         TextView englishTitle = (TextView)template.findViewById(R.id.english_title) ;
         TextView banglaTitle = (TextView)template.findViewById(R.id.bangla_title) ;
 
-        englishTitle.setText(title1);
-        banglaTitle.setText(title2);
+        englishTitle.setText(underline(title1));
+        banglaTitle.setText(underline(title2));
         banglaTitle.setTypeface(app.getFont(Language.BANGLA));
         englishTitle.setTypeface(app.getFont(Language.ENGLISH));
-
-
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,   // width
-                ViewGroup.LayoutParams.WRAP_CONTENT);  // height
 
         entries.addView(template);
         // click on the entry will show the poem
@@ -89,6 +86,13 @@ public class TOCActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), ShowPoemActivity.class);
         intent.putExtra(ShaktiApplication.KEY_CURSOR, index);
         startActivity(intent);
+    }
+
+    static SpannableString underline(final String text) {
+        SpannableString content = new SpannableString(text);
+        content.setSpan(new UnderlineSpan(), 0, text.length(), 0);
+        return content;
+
     }
 
 

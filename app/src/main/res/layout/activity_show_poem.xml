@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
     android:layout_width="match_parent"
@@ -14,29 +13,40 @@
         android:layout_height="wrap_content"
         android:indeterminate="true"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
+        android:id="@+id/scrollable_text_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize"
         android:fillViewport="true"
-        android:padding="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="100dp"
+        app:layout_constraintBottom_toTopOf="@id/audio_player"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/main_toolbar">
+        app:layout_constraintTop_toBottomOf="@id/main_toolbar"
+        android:padding="@dimen/default_padding_large">
 
-        <TextView
-            android:id="@+id/text_content"
+        <!-- a text switcher with two similar text views -->
+        <!-- the child views will have their typefaces   -->
+        <TextSwitcher
+            android:id="@+id/text_content_switcher"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:fontFamily="RobotoTextViewStyle" />
-
-
+            android:animateFirstView="true"/>
     </ScrollView>
+
+    <com.google.android.exoplayer2.ui.StyledPlayerControlView
+        android:id="@+id/audio_player"
+        android:layout_width="match_parent"
+        android:layout_height="80sp"
+        app:show_buffering="when_playing"
+        app:show_shuffle_button="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

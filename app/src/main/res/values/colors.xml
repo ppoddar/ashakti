@@ -1,4 +1,10 @@
 <resources>
+    <!-- color pallet light to darker -->
+    <color name="color_0">#E7E7DE</color>
+    <color name="color_1">#008891</color>
+    <color name="color_2">#00587A</color>
+    <color name="color_3">#0F3057</color>
+
     <!-- The color of the app bar -->
     <color name="colorPrimary">@color/color_3</color>
     <!-- The color of UI text in the app bar. -->
@@ -9,9 +15,5 @@
     <color name="logo_color">@color/color_3</color>
     <color name="display_background">@color/colorAccent</color>
 
-    <!-- color pallet light to darker -->
-    <color name="color_0">#E7E7DE</color>
-    <color name="color_1">#008891</color>
-    <color name="color_2">#00587A</color>
-    <color name="color_3">#0F3057</color>
+
 </resources>

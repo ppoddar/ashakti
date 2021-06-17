@@ -1,47 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!-- declares the buttons in a toolbar -->
-<menu
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-   >
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/action_table_of_content"
-        android:title="@string/action_table_of_content"
         android:icon="@drawable/toc"
+        android:menuCategory="container"
+        android:orderInCategory="1"
+        android:title="@string/action_table_of_content"
         android:tooltipText="list of poems"
-        android:orderInCategory="100"
-        app:showAsAction="always">
-    </item>
+        app:showAsAction="always"></item>
     <item
         android:id="@+id/action_switch_language"
-        android:title="@string/action_switch_language"
         android:icon="@drawable/translate"
+        android:menuCategory="container"
+        android:orderInCategory="2"
+        android:title="@string/action_switch_language"
         android:tooltipText="translate"
-        android:orderInCategory="100"
-        app:showAsAction="always">
-    </item>
 
-
-    <item
-        android:id="@+id/action_play_audio"
-        android:title="@string/action_play_audio"
-        android:icon="@drawable/play_audio"
-        app:showAsAction="always">
-    </item>
-    <item
-        android:id="@+id/action_pause_audio"
-        android:title="@string/action_pause_audio"
-        android:icon="@drawable/pause_audio"
-        app:showAsAction="always">
-    </item>
-
-    <item
-        android:id="@+id/action_stop_audio"
-        android:title="@string/action_stop_audio"
-        android:icon="@drawable/stop_audio"
-        app:showAsAction="always">
-    </item>
+        app:showAsAction="always"></item>
 
 </menu>
