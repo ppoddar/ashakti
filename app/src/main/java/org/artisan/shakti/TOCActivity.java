@@ -8,6 +8,7 @@ import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -17,6 +18,13 @@ import androidx.appcompat.widget.Toolbar;
 
 public class TOCActivity extends AppCompatActivity {
     private static final String ACTIVITY = TOCActivity.class.getSimpleName();
+
+    static SpannableString underline(final String text) {
+        SpannableString content = new SpannableString(text);
+        content.setSpan(new UnderlineSpan(), 0, text.length(), 0);
+        return content;
+
+    }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -37,26 +45,44 @@ public class TOCActivity extends AppCompatActivity {
     @SuppressLint("NonConstantResourceId")
     void setToolbar() {
         Toolbar toolbar = findViewById(R.id.main_toolbar);
-        setSupportActionBar(toolbar);
+        toolbar.inflateMenu(R.menu.main_menu);
+        toolbar.findViewById(R.id.action_switch_language).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.action_table_of_content).setVisibility(View.GONE);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_home:
+                        showHomeScreen();
+                        break;
+                }
+                return true; // the click is handled here itself
+            }
+        });
+    }
+
+    void showHomeScreen() {
+        Intent main = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(main);
     }
 
     /**
      * adds a TOC entry.
      *
-     * @param app   a context
+     * @param app    a context
      * @param title1 a title
      * @param title2 another title
-     * @param index a index of the entry
+     * @param index  a index of the entry
      */
     void addTOCEntry(final ShaktiApplication app,
                      String title1, String title2,
                      final int index) {
         Log.e(ACTIVITY, "adding toc entry " + title1 + " (" + title2 + ")");
         LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        ViewGroup entries = (ViewGroup) findViewById(R.id.toc_entries);
-        ViewGroup template = (ViewGroup)inflater.inflate(R.layout.toc_entry_template, null);
-        TextView englishTitle = (TextView)template.findViewById(R.id.english_title) ;
-        TextView banglaTitle = (TextView)template.findViewById(R.id.bangla_title) ;
+        ViewGroup entries = findViewById(R.id.toc_entries);
+        ViewGroup template = (ViewGroup) inflater.inflate(R.layout.toc_entry_template, null);
+        TextView englishTitle = template.findViewById(R.id.english_title);
+        TextView banglaTitle = template.findViewById(R.id.bangla_title);
 
         englishTitle.setText(underline(title1));
         banglaTitle.setText(underline(title2));
@@ -86,13 +112,6 @@ public class TOCActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), ShowPoemActivity.class);
         intent.putExtra(ShaktiApplication.KEY_CURSOR, index);
         startActivity(intent);
-    }
-
-    static SpannableString underline(final String text) {
-        SpannableString content = new SpannableString(text);
-        content.setSpan(new UnderlineSpan(), 0, text.length(), 0);
-        return content;
-
     }
 
 

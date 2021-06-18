@@ -26,7 +26,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:layout_marginBottom="@dimen/vertical_gap">
 
         <!-- only a single child view is allowed for a ScrollView -->
         <!-- TOC entries will be inserted here at runtime in a vertical liner layout -->

@@ -169,24 +169,19 @@ public class ShaktiApplication extends Application {
 
 
     /**
-     * gets the poem of given language at given cursor.
+     * gets the poem of current language at given cursor.
      *
      * @param cursor cursor
      * @return null if cursor out of range
      */
     public String getPoem(int cursor) {
-        Log.e(APP, "requested poem at cursor " + cursor + " language " + getCurrentLanguage());
         if (!hasPoem(cursor)) {
             Log.e(APP, "requested poem at cursor " + cursor + " is out of range. There are " + getPoemCount() + " registered poems");
             return null;
         }
-        switch (getCurrentLanguage()) {
-            case ENGLISH:
-                return englishPoems.get(cursor);
-            case BANGLA:
-                return banglaPoems.get(cursor);
-        }
-        return null;
+        return language == Language.ENGLISH
+                ? englishPoems.get(cursor)
+                : banglaPoems.get(cursor);
     }
 
     public Uri getAudioUri(int cursor) {
