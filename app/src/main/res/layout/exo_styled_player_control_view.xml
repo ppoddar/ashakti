@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This is an overwrite of Exo layout.                         -->
+<!-- The file name must be exo_styled_player_control_view.xml    -->
+<!-- This layout describes the layout of StyledPlayerControlView -->
+<!-- Ref: -->
+<!-- This customization contains a single play|pause button  -->
+<!-- The play button is  @drawable/exo_styled_controls_play  -->
+<!-- The pause button is @drawable/exo_styled_controls_pause -->
+<!-- This layout places the single button in a relative layout -->
+<!-- where the button centers itself in the entire space      -->
+<!-- available to the layout and retains its size             -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@id/exo_play_pause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="false"
+        android:layout_centerInParent="true"
+        android:contentDescription="@string/custom_play_pause_image" />
+</RelativeLayout>

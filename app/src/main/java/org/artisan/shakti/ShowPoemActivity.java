@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
@@ -25,17 +24,30 @@ import com.google.android.exoplayer2.ui.StyledPlayerControlView;
 /**
  * This activity displays content in two languages.
  * The list of content is available from the application.
- * The content can ve accessed by (language, index) tuple.
+ * The content can be accessed by {@link ShaktiApplication#getPoem(int, Language)}}..
  */
 public class ShowPoemActivity extends AppCompatActivity {
     private static final String ACTIVITY = ShowPoemActivity.class.getSimpleName();
-    private int cursor;
+    public static final int DEFAULT_CURSOR = 0;
+    public static final Language DEFAULT_LANGUAGE = Language.ENGLISH;
+    private int cursor = DEFAULT_CURSOR;
+    private Language language = DEFAULT_LANGUAGE;
     private TextSwitcher switcher;
     private SimpleExoPlayer player;
 
     /**
+     * Gets the currently active language.
+     * The currently active language determines the font.
+     *
+     * @return currently active language
+     */
+    public Language getCurrentLanguage() {
+        return language;
+    }
+
+    /**
      * This is called once on an instance.
-     * The critical instance state us a integer cursor.
+     * The critical instance state is integer cursor and language.
      * The state can be passed through the input bundle
      * or via the intent. By default, the cursor is zero.
      *
@@ -46,31 +58,27 @@ public class ShowPoemActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         ShaktiApplication app = (ShaktiApplication) getApplication();
-        cursor = (savedInstanceState != null)
-                ? savedInstanceState.getInt(ShaktiApplication.KEY_CURSOR)
-                : getIntent().getIntExtra(ShaktiApplication.KEY_CURSOR, 0);
-
-        Log.e(ACTIVITY, "onCreate cursor=" + cursor);
+        if (savedInstanceState != null) {
+            cursor = savedInstanceState.getInt(ShaktiApplication.KEY_CURSOR);
+            String lang = savedInstanceState.getString(ShaktiApplication.KEY_LANGUAGE, DEFAULT_LANGUAGE.toString());
+            language = Language.valueOf(lang.toUpperCase());
+        }
+        Log.d(ACTIVITY, String.format("onCreate cursor=%d language=%s", cursor,language));
         setContentView(R.layout.activity_show_poem);
 
-        setToolbar(app);
+        setToolbar();
         setTextSwitcher(app);
-        setNavigationButton(app);
+        setNavigationButton();
         setAudioPlayer(app);
     }
 
     @Override
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
+        super.onNewIntent(null);
         bundle.putInt(ShaktiApplication.KEY_CURSOR, cursor);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        //ShaktiApplication app = (ShaktiApplication)getApplication();
+        bundle.putString(ShaktiApplication.KEY_LANGUAGE, language.toString());
     }
 
     @Override
@@ -78,7 +86,12 @@ public class ShowPoemActivity extends AppCompatActivity {
         super.onResume();
         Log.e(ACTIVITY, "onResume");
         ShaktiApplication app = (ShaktiApplication) getApplication();
-        if (showPoem(cursor, app.getCurrentLanguage(), false)) {
+        String lang = getIntent().getStringExtra(ShaktiApplication.KEY_LANGUAGE);
+        if (lang == null) lang = DEFAULT_LANGUAGE.toString();
+        cursor      = getIntent().getIntExtra(ShaktiApplication.KEY_CURSOR, cursor);
+        Language renderLanguage = Language.valueOf(lang.toUpperCase());
+        boolean changeLanguage = setLanguage(renderLanguage);
+        if (showPoem(cursor, renderLanguage, changeLanguage)) {
             setAudioPlayer(app);
         }
     }
@@ -86,35 +99,36 @@ public class ShowPoemActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
-        player.stop(true);
+        if (player !=null) {
+            player.stop(true);
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        player.release();
+        if (player !=null) {
+            player.release();
+        }
     }
 
     @SuppressLint("NonConstantResourceId")
-    void setToolbar(final ShaktiApplication app) {
+    void setToolbar() {
         final Toolbar toolbar = findViewById(R.id.main_toolbar);
         toolbar.inflateMenu(R.menu.main_menu);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.action_home:
-                        showHomeScreen();
-                        break;
-                    case R.id.action_table_of_content:
-                        showTOC();
-                        break;
-                    case R.id.action_switch_language:
-                        switchPoem();
-                        break;
-                }
-                return true; // the click is handled here itself            }
+        toolbar.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.action_home:
+                    showHome();
+                    break;
+                case R.id.action_table_of_content:
+                    showTOC();
+                    break;
+                case R.id.action_switch_language:
+                    switchPoem();
+                    break;
             }
+            return true; // the click is handled here itself            }
         });
     }
 
@@ -137,17 +151,17 @@ public class ShowPoemActivity extends AppCompatActivity {
 
         switcher.setInAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_in));
         switcher.setOutAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_out));
-        /**
-         * the next and previous poem is shown by right and left swipe.
-         * if the cursor is out of range, the main activity pag eis shown.
+        /*
+          the next and previous poem is shown by right and left swipe.
+          if the cursor is out of range, the main activity page is shown.
          */
         switcher.setOnTouchListener(new OnSwipeTouchListener(ShowPoemActivity.this) {
             public void onSwipeRight() {
-                if (!nextPoem()) showHomeScreen();
+                if (!nextPoem()) showHome();
             }
 
             public void onSwipeLeft() {
-                if (!prevPoem()) showHomeScreen();
+                if (!prevPoem()) showHome();
             }
         });
     }
@@ -162,7 +176,7 @@ public class ShowPoemActivity extends AppCompatActivity {
         view.setShowTimeoutMs(0); // never expire
         Uri uri = app.getAudioUri(cursor);
         view.setVisibility(uri == null ? View.INVISIBLE : View.VISIBLE);
-        String title = app.getPoemTitle(app.getCurrentLanguage(), cursor);
+        String title = app.getPoemTitle(getCurrentLanguage(), cursor);
         if (uri != null) {
             Log.e(ACTIVITY, "enabling audio playback " + title + " uri " + uri);
             initAudioPlayer(view, uri);
@@ -173,16 +187,15 @@ public class ShowPoemActivity extends AppCompatActivity {
      * sets the button to next and previous poem.
      * must be updated after cursor changes
      *
-     * @param app application
      */
-    void setNavigationButton(ShaktiApplication app) {
+    void setNavigationButton() {
         ImageButton next = findViewById(R.id.action_next_poem);
         ImageButton prev = findViewById(R.id.action_prev_poem);
         next.setOnClickListener(v -> {
-            if (!nextPoem()) showHomeScreen();
+            if (!nextPoem()) showHome();
         });
         prev.setOnClickListener(v -> {
-            if (!prevPoem()) showHomeScreen();
+            if (!prevPoem()) showHome();
         });
 
     }
@@ -222,7 +235,7 @@ public class ShowPoemActivity extends AppCompatActivity {
      */
     private boolean showPoem(int index, Language language, boolean changeLanguage) {
         ShaktiApplication app = (ShaktiApplication) getApplication();
-        String poem = app.getPoem(index);
+        String poem = app.getPoem(index, language);
         if (poem == null) {
             Log.e(ACTIVITY, "No poem found at " + index);
             return false;
@@ -238,14 +251,26 @@ public class ShowPoemActivity extends AppCompatActivity {
     }
 
     /**
+     * Switches the language for display.
+     *
+     * @return the current language after switching
+     */
+    public Language switchLanguage() {
+        Language old = this.getCurrentLanguage();
+        language = getCurrentLanguage() == Language.ENGLISH
+                ? Language.BANGLA : Language.ENGLISH;
+        Log.d(ACTIVITY, "Switched language from " + old + " to " + language);
+        return language;
+    }
+
+    /**
      * shows next poem.
      * IMPORTANT: increments the cursor if next poem exists
      *
      * @return true if next poem exists and was shown
      */
     private boolean nextPoem() {
-        ShaktiApplication app = (ShaktiApplication) getApplication();
-        boolean success = this.showPoem(cursor + 1, app.getCurrentLanguage(), false);
+        boolean success = this.showPoem(cursor + 1, getCurrentLanguage(), false);
         if (success) {
             updateCursor(1);
         }
@@ -259,15 +284,19 @@ public class ShowPoemActivity extends AppCompatActivity {
      * @return true if previous poem exists and was shown
      */
     private boolean prevPoem() {
-        ShaktiApplication app = (ShaktiApplication) getApplication();
-        boolean success = this.showPoem(cursor - 1, app.getCurrentLanguage(), false);
+        boolean success = this.showPoem(cursor - 1, getCurrentLanguage(), false);
         if (success) {
             updateCursor(-1);
         }
         return success;
     }
 
+    /**
+     * updates internal state and rendered views when cursor changes.
+     * @param change delta of cursor. can be both positive or negative.
+     */
     private void updateCursor(int change) {
+        if (change == 0) return;
         cursor += change;
         ShaktiApplication app = (ShaktiApplication) getApplication();
         if (player != null) {
@@ -278,8 +307,7 @@ public class ShowPoemActivity extends AppCompatActivity {
             }
         }
         setAudioPlayer(app);
-        setNavigationButton(app);
-
+        setNavigationButton();
     }
 
     /**
@@ -288,12 +316,11 @@ public class ShowPoemActivity extends AppCompatActivity {
      * IMPORTANT: switches the active language.
      */
     private void switchPoem() {
-        ShaktiApplication app = (ShaktiApplication) getApplication();
-        app.switchLanguage();
-        showPoem(cursor, app.getCurrentLanguage(), true);
+        switchLanguage();
+        showPoem(cursor, getCurrentLanguage(), true);
     }
 
-    void showHomeScreen() {
+    void showHome() {
         Intent main = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(main);
     }
@@ -307,9 +334,23 @@ public class ShowPoemActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        player.release();
+        if (player != null) player.release();
     }
+
+    /**
+     * Sets the currently active language.
+     * The currently active language determines the font.
+     *
+     * @param lang language to set
+     * @return true if language has really changed
+     */
+    public boolean setLanguage(Language lang) {
+        if (language == lang) {
+            return false;
+        } else {
+            language = lang;
+            return true;
+        }
+    }
+
 }
-
-
-

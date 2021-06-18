@@ -4,9 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,37 +18,27 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setToolbar();
-
-        RelativeLayout layout = findViewById(R.id.main_activity_layout);
-        layout.setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {
-            public void onSwipeLeft() {
-                showPoem();
-            }
-            public void onSwipeRight() {
-                showPoem();
-            }
-        });
-
     }
+
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onResume() {
         super.onResume();
-        ImageButton enter = findViewById(R.id.action_start_app);
-        enter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent showPoem = new Intent(getApplicationContext(), ShowPoemActivity.class);
-                startActivity(showPoem);
+        RelativeLayout layout = findViewById(R.id.main_activity_layout);
+        layout.setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {
+            public void onSwipeLeft() {
+                showDefaultPoem();
             }
         });
-
+        ImageButton enter = findViewById(R.id.action_start_app);
+        enter.setOnClickListener(v -> showDefaultPoem());
     }
 
-    @SuppressLint("NonConstantResourceId")
     void setToolbar() {
         Toolbar toolbar = findViewById(R.id.main_toolbar);
-        toolbar.inflateMenu(R.menu.minimum_menu);
-
+        toolbar.inflateMenu(R.menu.main_menu);
+        toolbar.findViewById(R.id.action_home).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.action_switch_language).setVisibility(View.GONE);
         toolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.action_table_of_content) {
                 Intent intent = new Intent(getApplicationContext(), TOCActivity.class);
@@ -60,8 +48,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    void showPoem() {
+    /**
+     * Shows the default poem in default language
+     * via {@link ShowPoemActivity}.
+     */
+    void showDefaultPoem() {
         Intent intent = new Intent(getApplicationContext(), ShowPoemActivity.class);
+        intent.putExtra(ShaktiApplication.KEY_CURSOR, ShowPoemActivity.DEFAULT_CURSOR);
+        intent.putExtra(ShaktiApplication.KEY_LANGUAGE, ShowPoemActivity.DEFAULT_LANGUAGE);
         startActivity(intent);
     }
 }
