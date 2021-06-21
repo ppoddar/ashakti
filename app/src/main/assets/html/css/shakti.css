@@ -1,0 +1,71 @@
+@font-face {
+	font-family: 'kalpurush';
+	src: URL('../font/kalpurush.ttf');
+}
+.container {
+	height: 100%;
+	display: grid;
+	grid-gap: 1px;
+	grid: 200px 40px 120px auto 20px / repeat(12,1fr);
+	grid-template-areas: 
+		"h h h h h h h h h h h h"
+		"n n n n n n n n n n n n"
+		"t t t t t t t t t t t t"
+		". ep ep ep ep ep . bp bp bp bp bp"
+		"f f f f f f f f f f f f"
+}
+
+.header {
+	grid-area: h;
+}
+
+.nav {
+	grid-area: n;
+}
+
+.title {
+	grid-area: t;
+}
+
+.poem-english {
+	grid-area: ep;
+	font-family : "Noto Sans" ; 
+	font-size:1.2em;
+}
+
+.poem-bangla,h3 {
+	grid-area: bp;
+	font-family : "kalpurush" ; 
+	font-size:1.2em;
+}
+
+.footer {
+	grid-area: f;
+	border: 1px solid green;
+}
+
+#poem-title {
+	font-weight: bold;
+	font-size: 1.4em;
+	white-space: nowrap;
+}
+
+#toc {
+	position:fixed;
+	top:10%;
+}
+#toc-content {
+	list-style-type: disc;
+}
+
+
+.dropcap {
+	float:left;
+	width:3em;
+	vertical-align:text-top;
+    font-size: 200%;
+    line-height: 80%;
+    color:#888888;
+}
+
+

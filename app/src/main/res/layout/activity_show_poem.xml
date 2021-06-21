@@ -1,67 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <!-- Toolbar at the top -->
     <include layout="@layout/main_toolbar" />
-
-    <!-- Progress bar is hidden -->
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <!-- takes up all vertical space height = 0dp -->
-    <ScrollView
-        android:id="@+id/text_view_scroller"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_view_poem"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:fillViewport="true"
-        android:layout_marginBottom="100dp"
-        app:layout_constraintBottom_toTopOf="@id/audio_player"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/main_toolbar"
-        android:padding="@dimen/default_padding_large">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        tools:layout="@layout/fragment_poem"/>
 
-        <!-- a text switcher with two similar text views -->
-        <!-- the child views will have their typefaces   -->
-        <TextSwitcher
-            android:id="@+id/text_content_switcher"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:animateFirstView="true"/>
-    </ScrollView>
     <!-- a button bar for next and previous poems at the bottom -->
     <RelativeLayout
+        android:id="@+id/poem_navigation_button_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/poem_navigation_button_bar"
-        app:layout_constraintTop_toBottomOf="@id/text_view_scroller"
-        app:layout_constraintBottom_toTopOf="@id/audio_player"
-        >
-
+        android:orientation="horizontal">
         <ImageButton
             android:id="@+id/action_prev_poem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_marginBottom="@dimen/vertical_gap"
-            android:layout_marginLeft="@dimen/horizontal_gap"
+            android:layout_marginStart="@dimen/horizontal_gap"
             android:src="@drawable/navigate_before"
             android:background="@drawable/rounded_button"
-            >
+            android:contentDescription="previous poem"
+            tools:ignore="HardcodedText">
         </ImageButton>
 
         <ImageButton
@@ -69,24 +40,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_marginBottom="@dimen/vertical_gap"
-            android:layout_marginRight="@dimen/horizontal_gap"
+            android:layout_marginEnd="@dimen/horizontal_gap"
             android:src="@drawable/navigate_next"
             android:background="@drawable/rounded_button"
-            >
+            android:contentDescription="next poem"
+            tools:ignore="HardcodedText">
 
         </ImageButton>
 
     </RelativeLayout>
-    <!-- made visible if audio is present, gone otherwise -->
+    <!-- made visible if audio is present, invisible otherwise -->
+    <!-- appearance is controlled by exo_styled_player_control -->
     <com.google.android.exoplayer2.ui.StyledPlayerControlView
         android:id="@+id/audio_player"
         android:layout_width="match_parent"
         android:layout_height="80sp"
+        app:bar_gravity="center"
+        android:layout_gravity="bottom"
         app:show_buffering="when_playing"
         app:show_shuffle_button="false"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:visibility="invisible"
         />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

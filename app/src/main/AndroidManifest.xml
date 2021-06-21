@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.artisan.shakti">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".ShaktiApplication"
         android:allowBackup="true"
@@ -11,11 +13,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name="org.artisan.shakti.ShowPoemActivity"/>
-        <activity android:name="org.artisan.shakti.TOCActivity"/>
-        <activity android:name="org.artisan.shakti.MainActivity">
+        <activity android:name=".LocalWebActivity"></activity>
+        <activity android:name=".ShowPoemActivity" />
+        <activity android:name=".TOCActivity" />
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

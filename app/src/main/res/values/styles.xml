@@ -2,5 +2,35 @@
 <resources>
     <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
         <item name="android:fontFamily">sans-serif-light</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
+    <style name="banglaFont">
+        <item name="android:fontFamily">@font/kalpurush</item>
+    </style>
+
+    <style name="TitleStyle">
+        <item name="android:textSize">18pt</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="PoemStyle">
+        <item name="android:textSize">14pt</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="banglaTitleStyle" parent="TitleStyle">
+        <item name="android:fontFamily">@font/kalpurush</item>
+    </style>
+    <style name="banglaPoemStyle" parent="PoemStyle">
+        <item name="android:fontFamily">@font/kalpurush</item>
+    </style>
+
+    <style name="englishPoemStyle" parent="PoemStyle">
+        <item name="android:fontFamily">@font/raleway</item>
+    </style>
+
+    <style name="englishTitleStyle" parent="TitleStyle">
+        <item name="android:fontFamily">@font/raleway</item>
+    </style>
+
+
 </resources>

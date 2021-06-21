@@ -4,30 +4,29 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/action_home"
-        android:icon="@drawable/home"
-        android:menuCategory="container"
-        android:orderInCategory="1"
-        android:title="@string/action_home"
-        android:tooltipText="main screen"
-        app:showAsAction="always"/>
 
     <item
         android:id="@+id/action_table_of_content"
         android:icon="@drawable/toc"
-        android:menuCategory="container"
-        android:orderInCategory="2"
         android:title="@string/action_table_of_content"
         android:tooltipText="list of poems"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_switch_language"
         android:icon="@drawable/translate"
-        android:menuCategory="container"
-        android:orderInCategory="3"
         android:title="@string/action_switch_language"
         android:tooltipText="translate"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_biography"
+        android:title="@string/action_biography"
+        android:tooltipText="Biography"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_about"
+        android:title="@string/action_about"
+        android:tooltipText="Biography"
+        app:showAsAction="never"/>
 
 </menu>

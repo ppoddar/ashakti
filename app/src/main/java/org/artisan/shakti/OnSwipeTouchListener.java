@@ -7,7 +7,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 
-public class OnSwipeTouchListener implements OnTouchListener {
+class OnSwipeTouchListener implements OnTouchListener {
     private final GestureDetector gestureDetector;
 
     public OnSwipeTouchListener(Context ctx) {

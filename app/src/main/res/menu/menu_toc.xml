@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- declares the buttons in a toolbar -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_home"
+        android:icon="@drawable/home"
+        android:menuCategory="container"
+        android:orderInCategory="1"
+        android:title="@string/action_home"
+        android:tooltipText="main screen"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_biography"
+        android:title="@string/action_biography"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_about"
+        android:title="@string/action_about"
+        app:showAsAction="never"/>
+
+
+
+</menu>

@@ -20,7 +20,7 @@ import java.util.List;
  * The poem titles and file list are statically declared.
  */
 public class ShaktiApplication extends Application {
-    public static final String KEY_CURSOR = "CURSOR";
+    public static final String KEY_CURSOR   = "CURSOR";
     public static final String KEY_LANGUAGE = "LANGUAGE";
 
     private static final String APP = ShaktiApplication.class.getSimpleName();
@@ -28,8 +28,7 @@ public class ShaktiApplication extends Application {
     private List<String> englishPoems;
     private List<String> banglaPoems;
     private List<String> audioFiles;
-    private Typeface banglaFont;
-    private Typeface englishFont;
+    private Typeface englishFont, banglaFont;
 
     /**
      * initializes this application.
@@ -43,9 +42,9 @@ public class ShaktiApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.e(APP, "=========================================");
-        Log.e(APP, "onCreate initializing...");
-        Log.e(APP, "=========================================");
+        Log.d(APP, "=========================================");
+        Log.d(APP, "onCreate initializing...");
+        Log.d(APP, "=========================================");
         String[] fileNames = getResources().getStringArray(R.array.poem_file_list);
         englishPoems = createTOC(getResources().getString(R.string.english_poem_directory), fileNames, true);
         banglaPoems = createTOC(getResources().getString(R.string.bangla_poem_directory), fileNames, true);
@@ -55,25 +54,9 @@ public class ShaktiApplication extends Application {
         assert (englishPoems.size() == banglaPoems.size()) : String.format("english poems %d != bengali poems %d", englishPoems.size(), banglaPoems.size());
         assert (englishPoems.size() == audioFiles.size()) : String.format("english poems %d != audio files %d", englishPoems.size(), audioFiles.size());
 
-        banglaFont = getResources().getFont(R.font.kalpurush);
-        englishFont = getResources().getFont(R.font.raleway);
-    }
-
-    /**
-     * get the font for given language
-     *
-     * @param lang language
-     * @return a Typeface
-     */
-    public Typeface getFont(Language lang) {
-        switch (lang) {
-            case ENGLISH:
-                return englishFont;
-            case BANGLA:
-                return banglaFont;
-        }
-        throw new IllegalArgumentException("no font defined for language " + lang);
-    }
+        englishFont = Typeface.createFromAsset(getAssets(), "font/raleway.ttf");
+        banglaFont  = Typeface.createFromAsset(getAssets(), "font/kalpurush.ttf");
+   }
 
     /**
      * reads the content of each raw resource.
@@ -84,7 +67,7 @@ public class ShaktiApplication extends Application {
      * @param readContent if true reads the content file, else just cache the name
      * @return a list that may contain null
      */
-    List<String> createTOC(String dir, String[] rsrcNames, boolean readContent) {
+    private List<String> createTOC(String dir, String[] rsrcNames, boolean readContent) {
         List<String> list = new ArrayList<>();
         for (String rsrcName : rsrcNames) {
             String fileName = dir + '/' + rsrcName;
@@ -117,7 +100,7 @@ public class ShaktiApplication extends Application {
      * @return content of the stream in UTF8
      * @throws Exception if error
      */
-    String readFileContent(InputStream fis) throws Exception {
+    private String readFileContent(InputStream fis) throws Exception {
         StringBuilder buffer = new StringBuilder();
         BufferedReader reader = new BufferedReader(
                 new InputStreamReader(fis, StandardCharsets.UTF_8));
@@ -135,7 +118,7 @@ public class ShaktiApplication extends Application {
      * @param cursor cursor
      * @return null if cursor out of range
      */
-    public String getPoem(int cursor, Language language) {
+    String getPoem(int cursor, Language language) {
         if (!hasPoem(cursor)) {
             Log.e(APP, "requested poem at cursor " + cursor + " is out of range. There are " + getPoemCount() + " registered poems");
             return null;
@@ -145,14 +128,15 @@ public class ShaktiApplication extends Application {
                 return englishPoems.get(cursor);
             case BANGLA:
                 return banglaPoems.get(cursor);
+            default:
+                throw new IllegalArgumentException(String.format("no poem for language %s", language));
         }
-        throw new IllegalArgumentException(String.format("no poem for language %s", language));
     }
 
     /*
      * Gets the URI for audio file at given cursor.
      */
-    public Uri getAudioUri(int cursor) {
+    Uri getAudioUri(int cursor) {
         try {
             String audioFile = audioFiles.get(cursor);
             if (audioFile == null) return null;
@@ -165,15 +149,15 @@ public class ShaktiApplication extends Application {
     }
 
 
-    public int getPoemCount() {
+    int getPoemCount() {
         return englishPoems.size();
     }
 
-    public boolean hasPoem(int cursor) {
+    boolean hasPoem(int cursor) {
         return cursor >= 0 && cursor < getPoemCount();
     }
 
-    public boolean hasAudio(int cursor) {
+    boolean hasAudio(int cursor) {
         if (cursor < 0) return false;
         if (cursor > getPoemCount() - 1) return false;
         String rsrcName = audioFiles.get(cursor);
@@ -187,7 +171,7 @@ public class ShaktiApplication extends Application {
      * @param index index
      * @return a title
      */
-    public String getPoemTitle(Language lang, int index) {
+    String getPoemTitle(Language lang, int index) {
         String[] toc;
         if (lang == Language.BANGLA) {
             toc = getResources().getStringArray(R.array.bangla_poem_title_list);
@@ -196,83 +180,9 @@ public class ShaktiApplication extends Application {
         }
         return toc[index];
     }
-}
 
-//    /**
-//     * Play audio.
-//     *
-//     * @param cursor
-//     * @param view   an optional view t which the player will be attached
-//     * @param pb     an optional progress bar.
-//     */
-//    public void playAudio(int cursor, StyledPlayerControlView view, ProgressBar pb) {
-//        Uri uri = getAudioUri(cursor);
-//        if (uri == null) return;
-//        try {
-//            if (pb != null) pb.setVisibility(View.VISIBLE);
-//            audioPlayer = new SimpleExoPlayer.Builder(this).build();
-//            MediaItem mediaItem = new MediaItem.Builder()
-//                    .setUri(uri)
-//                    .build();
-//            audioPlayer.setMediaItem(mediaItem);
-//            audioPlayer.prepare();
-//            if (view != null) view.setPlayer(audioPlayer);
-//            audioPlayer.play();
-//        } finally {
-//            if (pb != null) pb.setVisibility(View.INVISIBLE);
-//        }
-//    }
-//
-//    public void stopAudio() {
-//        if (audioPlayer != null) {
-//            audioPlayer.stop();
-//        }
-//    }
-//
-//    public void pauseAudio() {
-//        if (audioPlayer != null) {
-//            audioPlayer.pause();
-//        }
-//    }
-//    /**
-//     * gets the file descriptor of a audio file at given cursor.
-//     *
-//     * @param cursor a index
-//     * @return null if audio file name is empty
-//     */
-//    public FileDescriptor getAudioStream(int cursor) {
-//        String fileName = audioFiles.get(cursor);
-//        if (fileName == null) {
-//            Log.e(APP, "no audio file at cursor " + cursor);
-//            return null;
-//        }
-//        try {
-//            InputStream in = getAssets().open(fileName);
-//            if (in == null) {
-//                Log.e(APP, "no stream for audio file  " + fileName);
-//                return null;
-//            }
-//            Log.e(APP, "reading audio stream " + fileName);
-//            File tmpFile = File.createTempFile("audio", "mp3", null);
-//            FileOutputStream out = new FileOutputStream(tmpFile);
-//            //int length = 1024;
-//            //byte[] buffer = new byte[length];
-//            int size = 1024;
-//            byte[] buffer = new byte[size];
-//            int len;
-//            int d = 0;
-//            while ((len = in.read(buffer, 0, size)) != -1) {
-//                out.write(buffer, 0, len);
-//                d += len;
-//            }
-//            in.close();
-//            out.close();
-//            Log.e(APP, "audio stream " + fileName + " has " + d + " bytes");
-//            FileInputStream fis = new FileInputStream(tmpFile);
-//            return fis.getFD();
-//        } catch (Exception ex) {
-//            Log.e(APP, "error reading audio stream " + fileName);
-//            ex.printStackTrace();
-//            return null;
-//        }
-//    }
+    Typeface getFontFor(Language lang) {
+        return (lang == Language.BANGLA)
+                ? banglaFont : englishFont;
+    }
+}

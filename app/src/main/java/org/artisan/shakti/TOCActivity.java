@@ -8,7 +8,6 @@ import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -36,11 +35,15 @@ public class TOCActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.toc);
         setToolbar();
+        setTOCEntries();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    void setTOCEntries() {
         ShaktiApplication app = (ShaktiApplication) getApplication();
         dispatcher.clear();
         for (int index = 0; index < app.getPoemCount(); index++) {
@@ -50,8 +53,7 @@ public class TOCActivity extends AppCompatActivity {
             }
             String englishTitle = app.getPoemTitle(Language.ENGLISH, index);
             String banglaTitle  = app.getPoemTitle(Language.BANGLA, index);
-            addTOCEntry(app, englishTitle, banglaTitle,
-                    player, index);
+            addTOCEntry(englishTitle, banglaTitle, player, index);
         }
     }
 
@@ -62,12 +64,18 @@ public class TOCActivity extends AppCompatActivity {
     @SuppressLint("NonConstantResourceId")
     void setToolbar() {
         Toolbar toolbar = findViewById(R.id.main_toolbar);
-        toolbar.inflateMenu(R.menu.main_menu);
-        toolbar.findViewById(R.id.action_switch_language).setVisibility(View.GONE);
-        toolbar.findViewById(R.id.action_table_of_content).setVisibility(View.GONE);
+        toolbar.inflateMenu(R.menu.menu_toc);
         toolbar.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == R.id.action_home) {
-                showHome();
+            switch (item.getItemId()) {
+                case R.id.action_home:
+                    showHome();
+                    break;
+                case R.id.action_biography:
+                    showWebpage("Biography", "html/biography.html");
+                    break;
+                case R.id.action_about:
+                    showWebpage("Notes", "html/notes.html");
+                    break;
             }
             return true; // the click is handled here itself
         });
@@ -89,25 +97,21 @@ public class TOCActivity extends AppCompatActivity {
      * The audio player control for each TOC entry are distinct.
      * But they share a common dispatcher that ensures that only
      * one player can be active at any given time.
-     *
-     * @param app    a context
-     * @param title1 english title
+     *  @param title1 english title
      * @param title2 bangla title
      * @param index  a index of the entry
      */
-    void addTOCEntry(final ShaktiApplication app,
-                     String title1, String title2,
+    void addTOCEntry(String title1, String title2,
                      Player player,
                      final int index) {
         Log.i(ACTIVITY, "adding toc entry " + title1 + " (" + title2 + ")");
         LayoutInflater inflater = (LayoutInflater) getApplicationContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         ViewGroup entries = findViewById(R.id.toc_entries);
-
-        ViewGroup template = (ViewGroup) inflater.inflate(R.layout.toc_entry_template, null);
-        final TextView englishTitle = template.findViewById(R.id.english_title);
-        final TextView banglaTitle  = template.findViewById(R.id.bangla_title);
-        final StyledPlayerControlView audioPlayer = template.findViewById(R.id.action_play_audio);
+        ViewGroup entry = (ViewGroup) inflater.inflate(R.layout.toc_entry_template, null);
+        final TextView englishTitle = entry.findViewById(R.id.english_title);
+        final TextView banglaTitle  = entry.findViewById(R.id.bangla_title);
+        final StyledPlayerControlView audioPlayer = entry.findViewById(R.id.action_play_audio);
         if (player != null) {
             audioPlayer.show();
             audioPlayer.setPlayer(player);
@@ -115,24 +119,22 @@ public class TOCActivity extends AppCompatActivity {
         }
         englishTitle.setText(underline(title1));
         banglaTitle.setText(underline(title2));
-        banglaTitle.setTypeface(app.getFont(Language.BANGLA));
-        englishTitle.setTypeface(app.getFont(Language.ENGLISH));
 
-        entries.addView(template);
+        entries.addView(entry);
         // click on the entry will show the poem
         englishTitle.setOnClickListener(v -> showPoem(index, Language.ENGLISH));
         banglaTitle.setOnClickListener(v -> showPoem(index, Language.BANGLA));
     }
 
     /**
-     * Shows a poem in a language via {@link ShowPoemActivity activity }.
+     * Shows a poem via ShowPoemActivity.
      * The poem index and language is passed to the intent that starts
      * the activity.
      * @param index the poem index
      * @param language the language
      */
-    void showPoem(int index, Language language) {
-        dispatcher.clear();
+    private void showPoem(int index, Language language) {
+        dispatcher.clear(); // stops any running playback
         Intent showPoem = new Intent(getApplicationContext(), ShowPoemActivity.class);
         showPoem.putExtra(ShaktiApplication.KEY_CURSOR, index);
         showPoem.putExtra(ShaktiApplication.KEY_LANGUAGE, language.toString());
@@ -144,9 +146,16 @@ public class TOCActivity extends AppCompatActivity {
      * @param text a string
      * @return an underlined text
      */
-    static SpannableString underline(final String text) {
+    private static SpannableString underline(final String text) {
         SpannableString content = new SpannableString(text);
         content.setSpan(new UnderlineSpan(), 0, text.length(), 0);
         return content;
+    }
+
+    void showWebpage(String title, String url) {
+        Intent intent = new Intent(getApplicationContext(), LocalWebActivity.class);
+        intent.putExtra(LocalWebActivity.KEY_URL, url);
+        intent.putExtra(LocalWebActivity.KEY_TITLE, title);
+        startActivity(intent);
     }
 }

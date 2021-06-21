@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/text_poem"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingStart="@dimen/horizontal_gap"
+        android:paddingEnd="@dimen/horizontal_gap"
+        android:paddingTop="@dimen/vertical_gap"
+        android:paddingBottom="@dimen/vertical_gap"
+        android:hint="poem"
+        android:scrollbars="vertical"
+        android:textSize="@dimen/text_h4"
+        tools:ignore="HardcodedText" />
+</LinearLayout>
