@@ -17,5 +17,6 @@
         android:hint="poem"
         android:scrollbars="vertical"
         android:textSize="@dimen/text_h4"
+        android:textIsSelectable="true"
         tools:ignore="HardcodedText" />
 </LinearLayout>

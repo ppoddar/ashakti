@@ -25,11 +25,11 @@
     </style>
 
     <style name="englishPoemStyle" parent="PoemStyle">
-        <item name="android:fontFamily">@font/raleway</item>
+        <item name="android:fontFamily">@font/robato_slab_medium</item>
     </style>
 
     <style name="englishTitleStyle" parent="TitleStyle">
-        <item name="android:fontFamily">@font/raleway</item>
+        <item name="android:fontFamily">@font/robato_slab_medium</item>
     </style>
 
 

@@ -54,7 +54,8 @@ public class ShaktiApplication extends Application {
         assert (englishPoems.size() == banglaPoems.size()) : String.format("english poems %d != bengali poems %d", englishPoems.size(), banglaPoems.size());
         assert (englishPoems.size() == audioFiles.size()) : String.format("english poems %d != audio files %d", englishPoems.size(), audioFiles.size());
 
-        englishFont = Typeface.createFromAsset(getAssets(), "font/raleway.ttf");
+        englishFont = Typeface.createFromAsset(getAssets(), "font/robato_slab_medium.ttf");
+        //englishFont = Typeface.createFromAsset(getAssets(), "font/raleway.ttf");
         banglaFont  = Typeface.createFromAsset(getAssets(), "font/kalpurush.ttf");
    }
 

@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_show_poem"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -47,19 +48,27 @@
             tools:ignore="HardcodedText">
 
         </ImageButton>
-
     </RelativeLayout>
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        tools:visibility="visible"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:foreground="@color/color_1"
+        android:backgroundTint="@color/color_0"/>
     <!-- made visible if audio is present, invisible otherwise -->
     <!-- appearance is controlled by exo_styled_player_control -->
     <com.google.android.exoplayer2.ui.StyledPlayerControlView
         android:id="@+id/audio_player"
         android:layout_width="match_parent"
         android:layout_height="80sp"
-        app:bar_gravity="center"
         android:layout_gravity="bottom"
-        app:show_buffering="when_playing"
-        app:show_shuffle_button="false"
         android:visibility="invisible"
-        />
+        app:bar_gravity="center"
+        app:show_buffering="when_playing"
+        app:show_shuffle_button="false" />
 
 </LinearLayout>

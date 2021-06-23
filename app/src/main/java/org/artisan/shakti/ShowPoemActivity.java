@@ -1,14 +1,23 @@
 package org.artisan.shakti;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -18,6 +27,8 @@ import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ui.StyledPlayerControlView;
 
 import org.jetbrains.annotations.NotNull;
+
+import static android.view.View.INVISIBLE;
 
 /**
  * This activity displays content in two languages.
@@ -30,7 +41,6 @@ public class ShowPoemActivity extends AppCompatActivity {
     private static final String ACTIVITY = ShowPoemActivity.class.getSimpleName();
     private int cursor = DEFAULT_CURSOR;
     private Language language = DEFAULT_LANGUAGE;
-    //private TextSwitcher switcher;
     private SimpleExoPlayer player;
 
     /**
@@ -108,6 +118,8 @@ public class ShowPoemActivity extends AppCompatActivity {
         }
     }
 
+
+
     @SuppressLint("NonConstantResourceId")
     private void setToolbar() {
         Toolbar toolbar = findViewById(R.id.main_toolbar);
@@ -141,10 +153,11 @@ public class ShowPoemActivity extends AppCompatActivity {
      * visible or invisible
      */
     private void setAudioPlayer(ShaktiApplication app) {
+        Log.e(ACTIVITY, "setAudioPlayer");
         StyledPlayerControlView view = findViewById(R.id.audio_player);
         view.setShowTimeoutMs(0); // never expire
         Uri uri = app.getAudioUri(cursor);
-        view.setVisibility(uri == null ? View.INVISIBLE : View.VISIBLE);
+        view.setVisibility(uri == null ? INVISIBLE : View.VISIBLE);
         String title = app.getPoemTitle(getCurrentLanguage(), cursor);
         if (uri != null) {
             Log.e(ACTIVITY, "enabling audio playback " + title + " uri " + uri);
@@ -171,7 +184,9 @@ public class ShowPoemActivity extends AppCompatActivity {
      * @param uri  an media URI
      */
     private void initAudioPlayer(StyledPlayerControlView view, Uri uri) {
+        Log.e(ACTIVITY, "initAudioPlayer...");
         try {
+            findViewById(R.id.progress_bar).setVisibility(View.VISIBLE);
             player = new SimpleExoPlayer.Builder(this).build();
             Log.e(ACTIVITY, "creating audio media item from " + uri);
             MediaItem mediaItem = new MediaItem.Builder()
@@ -183,18 +198,23 @@ public class ShowPoemActivity extends AppCompatActivity {
         } catch (Exception ex) {
             // TODO: Error Dialog
             ex.printStackTrace();
+        } finally {
+            Log.e("", "stop progress");
+            findViewById(R.id.progress_bar).setVisibility(INVISIBLE);
         }
     }
 
-    /**
-     * Displays a poem.
-     * The current <tt>cursor</tt> selects the  poem from the application.
-     * The cursor is not modified by this method.
-     *
-     * @param index index of the poem to be shown
-     * @return true if a poem can be displayed i.e. the cursor is
-     * within range. false, otherwise.
-     */
+
+
+        /**
+         * Displays a poem.
+         * The current <tt>cursor</tt> selects the  poem from the application.
+         * The cursor is not modified by this method.
+         *
+         * @param index index of the poem to be shown
+         * @return true if a poem can be displayed i.e. the cursor is
+         * within range. false, otherwise.
+         */
     private boolean showPoem(int index) {
         ShaktiApplication app = (ShaktiApplication) getApplication();
         String poemText = app.getPoem(index, language);
@@ -206,7 +226,14 @@ public class ShowPoemActivity extends AppCompatActivity {
         PoemFragment poem = new PoemFragment();
         poem.setText(poemHtml);
         poem.setLanguage(app.getFontFor(language));
+        Animation left_in = AnimationUtils.makeInAnimation(this, true);
+
         getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(
+                        android.R.anim.slide_in_left,
+                        android.R.anim.fade_out,
+                        android.R.anim.fade_in,
+                        android.R.anim.slide_out_right)
                 .replace(R.id.fragment_view_poem, poem)
                 .commit();
         return true;
