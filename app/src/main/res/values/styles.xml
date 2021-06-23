@@ -33,4 +33,21 @@
     </style>
 
 
+    <style name="buttonStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/rounded_button</item>
+        <item name="backgroundColor">@color/color_3</item>
+        <item name="android:textColor">@color/color_0</item>
+    </style>
+
+    <style name="smallButtonStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/rounded_button</item>
+        <item name="backgroundColor">@color/color_0</item>
+        <item name="android:textColor">@color/color_3</item>
+    </style>
+
+
 </resources>

@@ -1,23 +1,14 @@
 package org.artisan.shakti;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -119,7 +110,6 @@ public class ShowPoemActivity extends AppCompatActivity {
     }
 
 
-
     @SuppressLint("NonConstantResourceId")
     private void setToolbar() {
         Toolbar toolbar = findViewById(R.id.main_toolbar);
@@ -205,16 +195,15 @@ public class ShowPoemActivity extends AppCompatActivity {
     }
 
 
-
-        /**
-         * Displays a poem.
-         * The current <tt>cursor</tt> selects the  poem from the application.
-         * The cursor is not modified by this method.
-         *
-         * @param index index of the poem to be shown
-         * @return true if a poem can be displayed i.e. the cursor is
-         * within range. false, otherwise.
-         */
+    /**
+     * Displays a poem.
+     * The current <tt>cursor</tt> selects the  poem from the application.
+     * The cursor is not modified by this method.
+     *
+     * @param index index of the poem to be shown
+     * @return true if a poem can be displayed i.e. the cursor is
+     * within range. false, otherwise.
+     */
     private boolean showPoem(int index) {
         ShaktiApplication app = (ShaktiApplication) getApplication();
         String poemText = app.getPoem(index, language);
@@ -226,8 +215,6 @@ public class ShowPoemActivity extends AppCompatActivity {
         PoemFragment poem = new PoemFragment();
         poem.setText(poemHtml);
         poem.setLanguage(app.getFontFor(language));
-        Animation left_in = AnimationUtils.makeInAnimation(this, true);
-
         getSupportFragmentManager().beginTransaction()
                 .setCustomAnimations(
                         android.R.anim.slide_in_left,
@@ -244,8 +231,7 @@ public class ShowPoemActivity extends AppCompatActivity {
      */
     private void switchLanguage() {
         Language old = this.getCurrentLanguage();
-        language = getCurrentLanguage() == Language.ENGLISH
-                ? Language.BANGLA : Language.ENGLISH;
+        language = old.flip();
         Log.d(ACTIVITY, "Switched language from " + old + " to " + language);
     }
 

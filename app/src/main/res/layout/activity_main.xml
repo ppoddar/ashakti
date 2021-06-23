@@ -42,11 +42,12 @@
 
     <ImageButton
         android:id="@+id/action_start_app"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/rounded_button"
-        android:src="@drawable/navigate_next" />
+        android:src="@drawable/navigate_next"
+        android:contentDescription="show first poem"
+        tools:ignore="HardcodedText"
+        style="@style/smallButtonStyle"
+        />
 
 </RelativeLayout>

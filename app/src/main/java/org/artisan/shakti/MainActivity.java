@@ -2,7 +2,6 @@ package org.artisan.shakti;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -117,19 +116,15 @@ public class MainActivity extends AppCompatActivity {
      */
     void showPoem() {
         Intent intent = new Intent(getApplicationContext(), ShowPoemActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putInt(ShaktiApplication.KEY_CURSOR, 0);
-        bundle.putString(ShaktiApplication.KEY_LANGUAGE, language.toString());
-        intent.putExtras(bundle);
+        intent.putExtra(ShaktiApplication.KEY_CURSOR, 0);
+        intent.putExtra(ShaktiApplication.KEY_LANGUAGE, language.toString());
         startActivity(intent);
     }
 
     void showWebpage(String title, String url) {
         Intent intent = new Intent(getApplicationContext(), LocalWebActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString(LocalWebActivity.KEY_URL, url);
-        bundle.putString(LocalWebActivity.KEY_TITLE, title);
-        intent.putExtras(bundle);
+        intent.putExtra(LocalWebActivity.KEY_URL, url);
+        intent.putExtra(LocalWebActivity.KEY_TITLE, title);
         startActivity(intent);
     }
 }
