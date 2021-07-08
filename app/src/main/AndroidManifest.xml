@@ -3,6 +3,7 @@
     package="org.artisan.shakti">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".ShaktiApplication"
@@ -14,7 +15,6 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".LocalWebActivity"></activity>
-        <activity android:name=".ShowPoemActivity" />
         <activity android:name=".TOCActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>

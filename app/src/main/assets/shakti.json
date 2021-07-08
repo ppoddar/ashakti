@@ -1,0 +1,62 @@
+{
+  "poet": {
+    "english" : {
+      "name": "Shakti Chattopadhayay",
+      "lifetime": "1933-95"
+    },
+    "bangla" : {
+      "name": "শক্তি চট্টোপাধ্যায়",
+      "lifetime": "১৯৩৩-৯৫"
+    }
+  },
+  "root-directory": {
+    "english": "content/english",
+    "bangla": "content/bangla",
+    "audio": "content/audio"
+  },
+  "font": {
+    "english": "font/robato_slab_medium.ttf",
+    "bangla" : "font/kalpurush.ttf"
+  },
+  "poems": [
+    {
+      "english": {"title": "Melodies of Joy", "source": "melodies_of_joy"},
+      "bangla":  {"title": "আনন্দ-ভৈরবী", "source": "melodies_of_joy"},
+      "audio":   "melodies_of_joy"
+    },
+    {
+      "english": {"title": "The Key", "source": "the_key"},
+      "bangla":  {"title": "চাবি", "source": "the_key"}
+    },
+    {
+      "english": {"title": "Oboni. Are You Home?", "source": "oboni"},
+      "bangla":  {"title": "অবনী, বাড়ি আছো ?", "source": "oboni"}
+    },
+    {
+      "english": {"title": "The Anarchist", "source": "anarchist"},
+      "bangla":  {"title": "আমি স্বেচ্ছাচারী", "source": "anarchist"}
+    },
+    {
+      "english": {"title": "Not a Happy Hour", "source": "not_a_happy_hour"},
+      "bangla" : {"title": "সে বড়ো সুখের সময় নয়, সে বড়ো আনন্দের সময় নয়", "source": "not_a_happy_hour"},
+      "audio"  : "not_a_happy_hour"
+    },
+    {
+      "english": {"title": "The Postmen in Forest of Fall", "source": "postmen_in_forest_of_fall"},
+      "bangla":  {"title": "হেমন্তের অরণ্যে আমি পোস্টম্যান", "source": "postmen_in_forest_of_fall"},
+      "audio"  : "postmen_in_forest_of_fall"
+    },
+    {
+      "english": {"title": "Take Me Back", "source": "take_me_back"},
+      "bangla":  {"title": "জরাসন্ধ", "source": "take_me_back"},
+      "audio"  : "take_me_back"
+
+    },
+    {
+      "english": {"title": "I May Go", "source": "may_go"},
+      "bangla":  {"title": "যেতে পারি, কিন্তু কেন যাবো?", "source": "may_go"},
+      "audio"  : "may_go"
+
+    }
+  ]
+}

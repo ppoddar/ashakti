@@ -13,6 +13,7 @@
     android:layout_alignParentTop="true"
     android:theme="@style/AppTheme"
     app:navigationIcon="@drawable/logo"
-    app:title="@string/app_name" />
+    app:title="@string/app_name"
+    app:menu="@menu/menu_main"/>
 
 <!--     android:background="?attr/colorPrimary"  -->

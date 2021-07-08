@@ -1,53 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- FrameLayout must be the parent of a ViewPager -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_activity_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_centerHorizontal="true"
-    tools:context=".MainActivity"
-    android:padding="@dimen/default_padding">
-
-    <include layout="@layout/main_toolbar" />
-
-    <ImageView
-        android:id="@+id/logo"
+    tools:context=".MainActivity">
+    <!-- covers the entire screen. The page will contain the toolbar and content -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:adjustViewBounds="true"
-        android:contentDescription="image of Shakti"
-        android:src="@drawable/logo"
-        tools:ignore="HardcodedText"
-        android:layout_centerInParent="true"/>
+        android:layout_height="match_parent"/>
 
-    <TextView
-        android:id="@+id/label_poet_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/logo"
-        android:layout_centerHorizontal="true"
-        android:paddingTop="20dp"
-        android:textSize="@dimen/text_h1"
-        android:textStyle="bold"/>
-
-    <TextView
-        android:id="@+id/label_poet_life"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/label_poet_name"
-        android:layout_centerHorizontal="true"
-        android:textStyle="bold"
-         />
-
-    <ImageButton
-        android:id="@+id/action_start_app"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:src="@drawable/navigate_next"
-        android:contentDescription="show first poem"
-        tools:ignore="HardcodedText"
-        style="@style/smallButtonStyle"
-        />
-
-</RelativeLayout>
+</FrameLayout>

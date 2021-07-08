@@ -8,13 +8,13 @@
     <item
         android:id="@+id/action_table_of_content"
         android:icon="@drawable/toc"
-        android:title="@string/action_table_of_content"
+        android:title="@string/label_table_of_content"
         android:tooltipText="list of poems"
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_switch_language"
         android:icon="@drawable/translate"
-        android:title="@string/action_switch_language"
+        android:title="@string/label_switch_language"
         android:tooltipText="translate"
         app:showAsAction="ifRoom"/>
 

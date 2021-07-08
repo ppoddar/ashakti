@@ -1,51 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- declares the buttons in a toolbar -->
+<!-- declares the menu in a toolbar -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/action_share"
-        android:icon="@drawable/share"
-        android:orderInCategory="2"
-        android:title="Share"
-        android:tooltipText="share"
-        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/action_switch_language"
         android:icon="@drawable/translate"
-        android:orderInCategory="1"
-        android:title="@string/action_switch_language"
+        android:title="@string/label_switch_language"
         android:tooltipText="translate"
-        app:showAsAction="ifRoom"/>
-
+        app:showAsAction="always"/>
     <item
         android:id="@+id/action_table_of_content"
         android:icon="@drawable/toc"
-        android:orderInCategory="3"
-        android:title="@string/action_table_of_content"
+        android:title="@string/label_table_of_content"
         android:tooltipText="list of poems"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
 
     <item
-        android:id="@+id/action_home"
-        android:icon="@drawable/home"
-        android:orderInCategory="3"
-        android:title="@string/action_home"
-        android:tooltipText="main screen"
+        android:id="@+id/action_share"
+        android:icon="@drawable/share"
+        android:title="@string/label_share"
+        android:tooltipText="share"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/action_biography"
         android:title="@string/action_biography"
-        android:orderInCategory="4"
-
         app:showAsAction="never"/>
     <item
         android:id="@+id/action_about"
         android:title="@string/action_about"
-        android:orderInCategory="5"
-
         app:showAsAction="never"/>
 
 

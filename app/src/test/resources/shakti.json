@@ -1,0 +1,21 @@
+{
+  "root-directory": {
+    "english": "english",
+    "bangla" : "bangla",
+    "audio"  : "audio"
+  },
+  "poems": [
+    {
+      "english": {
+        "title": "Melodies of Joy",
+        "source": "melodies_of_joy"
+      },
+      "bangla": {
+        "title": "Melodies of Joy",
+        "source": "melodies_of_joy"
+      },
+      "audio": "melodies_of_joy"
+    }
+  ]
+}
+
