@@ -3,9 +3,10 @@ package org.artisan.shakti;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
@@ -15,7 +16,6 @@ public class LocalWebActivity extends AppCompatActivity {
     private static final String BASE_URL    = "file:///android_asset";
     private static final String DEFAULT_URL = "html/index.html";
 
-    private Toolbar toolbar;
     private WebView localWeb;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,19 +28,17 @@ public class LocalWebActivity extends AppCompatActivity {
     }
 
     void setToolbar() {
-        toolbar = new Toolbar(this);
+        Toolbar toolbar = new Toolbar(this);
         toolbar.inflateMenu(R.menu.menu_web);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                if (item.getItemId() == R.id.action_home) {
-                    showHome();
-                }
-                return true;
+        toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.action_home) {
+                showHome();
             }
+            return true;
         });
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     void setWebClient() {
         localWeb = findViewById(R.id.local_web);
         localWeb.getSettings().setJavaScriptEnabled(true);
@@ -65,6 +63,14 @@ public class LocalWebActivity extends AppCompatActivity {
     void showHome() {
         Intent main = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(main);
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    public static void showPage(Context ctx, String url) {
+        WebView web = new WebView(ctx);
+        web.getSettings().setJavaScriptEnabled(true);
+        web.setWebChromeClient(new WebChromeClient());
+        web.loadUrl(BASE_URL + '/' + url);
     }
 
 }

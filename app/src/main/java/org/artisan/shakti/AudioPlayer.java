@@ -8,59 +8,98 @@ import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ui.StyledPlayerControlView;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Plays audio stream.
+ * Manages multiple players each play/pause a single stream.
+ */
 public class AudioPlayer {
-     private SimpleExoPlayer player;
-    final StyledPlayerControlView view;
+    private SimpleExoPlayer delegate;
     final Context ctx;
+    final StyledPlayerControlView view;
     final String audio;
-    final MediaItem item;
+    private MediaItem item;
+
+    private static final List<SimpleExoPlayer> _players = new ArrayList<>();
+    private static final String TAG = AudioPlayer.class.getSimpleName();
+
     /**
-     * A player exists for each activity instance.
-     * The button would toggle play/pause.
-     *
+     * Creates a player.
      * @param ctx a context
-     * @param view a control to audio player play/pause button only configured
-     * @param audio path to audio file
+     * @return
      */
-    AudioPlayer (Context ctx, StyledPlayerControlView view, final String audio) {
-        this.ctx = ctx;
-        this.view = view;
-        this.audio = audio;
-        player = initPlayer();
-        Uri uri = Uri.parse("asset:///" + audio);
-        item = new MediaItem.Builder()
-                .setUri(uri)
-                .build();
-        player.setMediaItem(item);
-        player.prepare();
+    public static AudioPlayer create(Context ctx, StyledPlayerControlView view, String audio) {
+        AudioPlayer player = new AudioPlayer(ctx, view, audio);
+        _players.add(player.delegate);
 
-        view.findViewById(R.id.exo_play_pause).setOnClickListener((v)->play());
-    }
-
-    /**
-     * play/pause given audio.
-     */
-    public void play() {
-        if (player.isPlaying()) {
-            Log.e("AudioPlayer", "pause " + audio);
-            player.setPlayWhenReady(false);
-        } else {
-            Log.e("AudioPlayer", "play " + audio);
-            player.setPlayWhenReady(true);
-        }
-    }
-
-    SimpleExoPlayer initPlayer() {
-        Log.e("AudioPlayer", "initPlayer");
-        player = new SimpleExoPlayer.Builder(ctx).build();
-        view.setPlayer(player);
-        view.setShowTimeoutMs(0); // never expire
         return player;
     }
 
-    public void release() {
+    /**
+     * A player exists for each activity instance.
+     * The button would toggle play/pause.
+     *  @param ctx a context
+     */
+    private AudioPlayer(@NotNull Context ctx, StyledPlayerControlView view, String audio) {
+        this.ctx = ctx;
+        this.view = view;
+        this.audio = audio;
+        Uri uri = Uri.parse("asset:///" + audio);
+        this.item = new MediaItem.Builder()
+                .setUri(uri)
+                .build();
+        delegate = new SimpleExoPlayer.Builder(ctx).build();
+        delegate.setMediaItem(item);
+        view.setPlayer(delegate);
+        delegate.prepare();
+
+        //view.findViewById(R.id.exo_play_pause).setOnClickListener((v)->play());
+    }
+
+    /**
+     * play current audio.
+     */
+    public void play() {
+        for (SimpleExoPlayer p : _players) {
+            if (p != delegate && p.isPlaying()) {
+                p.stop();
+            }
+        }
+        Log.e(TAG, this + ".play() " + audio);
+        if (isPlaying()) {
+            pause();
+        } else {
+            delegate.play();
+        }
+    }
+
+    public boolean isPlaying() {
+        return delegate.isPlaying();
+    }
+    public void pause() {
+        Log.e(TAG, this + ".pause() " + audio);
+        delegate.pause();
+    }
+
+    public void stop() {
+        Log.e("AudioPlayer", "stop()");
+        delegate.stop(false);
+    }
+
+    public static void release() {
         Log.e("AudioPlayer", "release");
-        player.stop(true);
-        player.release();
+        for (SimpleExoPlayer p : _players) {
+            p.stop(true);
+            p.release();
+        }
+    }
+
+    public String toString() {
+        return AudioPlayer.class.getSimpleName() + "@"
+                + Integer.toHexString(this.hashCode());
     }
 }

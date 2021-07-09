@@ -14,8 +14,11 @@
     android:paddingEnd="@dimen/horizontal_gap"
     android:paddingBottom="@dimen/vertical_gap">
 
+    <!-- One column shows titles in english and bangla. -->
+    <!-- Takes up the available horizontal space        -->
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:id="@+id/tile_column"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
@@ -46,24 +49,22 @@
     <!-- the space will be fully occupied by the customized layout -->
     <!-- as defined in  @drawable/exo_styled_player_controls_view  -->
 
-    <!--
+
     <com.google.android.exoplayer2.ui.StyledPlayerControlView
         android:id="@+id/action_play_audio"
         android:layout_width="58dp"
-        android:layout_height="32dp"
-        android:visibility="invisible"
-
+        android:layout_height="42dp"
+        android:padding="0dp"
         app:animation_enabled="false"
-        app:show_buffering="when_playing"
+        app:show_buffering="never"
+        app:show_rewind_button="true"
         app:show_shuffle_button="false"
         app:show_timeout="0"
-        tools:visibility="visible" />
-        -->
+        app:rewind_increment="30000"
+        android:visibility="invisible"
+        tools:visibility="visible"
+        tools:layout="@layout/exo_styled_player_control_view"/>
 
-    <ImageButton
-        android:id="@+id/action_play_audio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/exo_icon_circular_play"/>
+
 </LinearLayout>
 

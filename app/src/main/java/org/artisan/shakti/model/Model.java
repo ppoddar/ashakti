@@ -16,8 +16,10 @@ import java.util.List;
 public class Model {
     public Typeface englishFont;
     public Typeface banglaFont;
+    public Poet banglaPoet;
+    public Poet englishPoet;
+
     public DirectoryPath roots;
-    public Poet poet;
     private final List<TOCEntry> entries = new ArrayList<>();
 
     /**
@@ -33,6 +35,9 @@ public class Model {
         return entries.get(position);
     }
 
+    public Poet getPoet(Language lang) {
+        return lang == Language.BANGLA ? banglaPoet : englishPoet;
+    }
     public Poem getPoem(int position, Language lang) {
         TOCEntry entry = getEntry(position);
         return lang == Language.BANGLA ? entry.bangla : entry.english;

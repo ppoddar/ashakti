@@ -31,8 +31,9 @@ public class ModelBuilder {
                 .getAsJsonObject();
         model.roots = parseDirectoryPath(json, ctx);
         model.englishFont = parseFont(json, Language.ENGLISH, ctx);
+        model.englishPoet = Poet.fromJson(json.get("poet").getAsJsonObject().get("english").getAsJsonObject());
         model.banglaFont  = parseFont(json, Language.BANGLA, ctx);
-        model.poet = Poet.fromJson(json.get("poet").getAsJsonObject());
+        model.banglaPoet  = Poet.fromJson(json.get("poet").getAsJsonObject().get("bangla").getAsJsonObject());
         JsonArray array = json.get("poems").getAsJsonArray();
         for (int i = 0; i < array.size(); i++) {
             JsonObject poem = array.get(i).getAsJsonObject();

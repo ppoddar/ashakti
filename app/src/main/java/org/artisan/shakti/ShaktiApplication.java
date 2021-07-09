@@ -7,12 +7,22 @@ import android.util.Log;
 
 import org.artisan.shakti.model.Model;
 import org.artisan.shakti.model.ModelBuilder;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
 
 /**
- * The application class holds a navigable {@link Model model}.
- * The model is accessible statically.
+ * This application presents a set of poems (and their English translation)
+ * by Bengali poet Shakti Chattopadhyay.
+ * The application on Android platform is mostly based on a series of pages
+ * presented as {@link androidx.fragment.app.Fragment fragment} and a
+ * {@link }ViewPager2 pager} that sweeps these pages using a {@link PoemViewAdapter
+ * adapter}.
+ * <p>
+ * The underlying (@link {@link Model content model} has a set of {@link org.artisan.shakti.model.Poem Poem},
+ * {@link org.artisan.shakti.model.Poet Poet} and {@link org.artisan.shakti.model.TOCEntry
+ * entries}. A poem occurs in two languages. It may have a audio rendition.
+ * </p>
  */
 public class ShaktiApplication extends Application {
     public static final String KEY_CURSOR   = "CURSOR";
@@ -20,7 +30,6 @@ public class ShaktiApplication extends Application {
     public static final Language LANGUAGE_DEFAULT = Language.ENGLISH;
     public static final String  TAG = "App";
 
-    private Context context;
     private Model model;
     private Language language;
     private static final String APP = ShaktiApplication.class.getSimpleName();
@@ -29,10 +38,9 @@ public class ShaktiApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        context = this;
         language = LANGUAGE_DEFAULT;
         Log.e(APP, "=========================================");
-        Log.e(APP, "onCreate initializing...");
+        Log.e(APP, "onCreate() initializing...");
         Log.e(APP, "=========================================");
         try {
             model = getModel();
@@ -41,12 +49,11 @@ public class ShaktiApplication extends Application {
         }
    }
 
-   public Context getContext() {
-        return context;
-   }
-
-
-   public Model getModel()  {
+    /**
+     * Gets the content model, creating from an asset if necessary.
+     * @return a model
+     */
+   public @NotNull Model getModel()  {
         if (model == null) {
             try {
                 InputStream config = getAssets().open("shakti.json");
@@ -58,11 +65,19 @@ public class ShaktiApplication extends Application {
         return model;
    }
 
+    /**
+     * The current language for all the pages.
+     * @return a language
+     * @see #setLanguage(Language)
+     */
    public Language getCurrentLanguage() {
         return language;
    }
 
-
+    /**
+     * Changes the language.
+     * @param lang a language
+     */
     public void setLanguage(Language lang) {
         Log.e(TAG, "setToLanguage " + lang);
         language = lang;

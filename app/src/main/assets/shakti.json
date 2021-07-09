@@ -1,10 +1,12 @@
 {
   "poet": {
     "english" : {
+      "title" : "Shakti",
       "name": "Shakti Chattopadhayay",
       "lifetime": "1933-95"
     },
     "bangla" : {
+      "title" : "শক্তি",
       "name": "শক্তি চট্টোপাধ্যায়",
       "lifetime": "১৯৩৩-৯৫"
     }

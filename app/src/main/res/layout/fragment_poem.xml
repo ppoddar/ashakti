@@ -18,12 +18,14 @@
         android:paddingTop="@dimen/vertical_gap"
         android:paddingBottom="@dimen/vertical_gap"
         android:hint="poem"
+        android:editable="false"
         android:scrollbars="vertical"
         android:textSize="@dimen/text_h4"
         android:textIsSelectable="true"
-        android:inputType="none"
         android:longClickable="true"
         android:focusable="true"
+        android:focusableInTouchMode="true"
+
         tools:ignore="HardcodedText" />
 
 

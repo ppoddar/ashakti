@@ -1,5 +1,6 @@
 package org.artisan.shakti;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 
 import android.view.LayoutInflater;
@@ -12,7 +13,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class FrontPage extends BaseFragment {
-    
+    Language language;
+    Poet     poet;
+
+    public void init(Poet poet, Language language) {
+        this.poet = poet;
+        this.language = language;
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -30,12 +37,15 @@ public class FrontPage extends BaseFragment {
     public void onViewCreated(@NotNull View view, @Nullable Bundle state)  {
         super.onViewCreated(view, state);
         ShaktiApplication app = (ShaktiApplication) requireActivity().getApplication();
-        Language language = app.getCurrentLanguage();
+        Typeface font = app.getModel().getFont(language);
+        Poet poet     = app.getModel().getPoet(language);
         TextView name = view.findViewById(R.id.label_poet_name);
-        TextView life = view.findViewById(R.id.label_poet_life);
-        Poet poet = app.getModel().poet;
-        name.setText(language == Language.BANGLA ? poet.banglaName : poet.englishName);
-        life.setText(language == Language.BANGLA ? poet.banglaLifetime : poet.englishLifetime);
+        TextView lifetime = view.findViewById(R.id.label_poet_life);
+        name.setText(poet.name);
+        lifetime.setText(poet.lifetime);
+        name.setTypeface(font);
+        lifetime.setTypeface(font);
+
     }
 
     @NotNull

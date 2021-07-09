@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- This is an overwrite of Exo layout.                         -->
+<?xml version="1.0" encoding="utf-8"?><!-- This is an overwrite of Exo layout.                         -->
 <!-- The file name must be exo_styled_player_control_view.xml    -->
 <!-- This layout describes the layout of StyledPlayerControlView -->
 <!-- Ref: -->
@@ -9,15 +8,49 @@
 <!-- This layout places the single button in a relative layout -->
 <!-- where the button centers itself in the entire space      -->
 <!-- available to the layout and retains its size             -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
 
-    <ImageView
-        android:id="@id/exo_play_pause"
-        android:layout_width="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:adjustViewBounds="false"
-        android:layout_centerInParent="true"
-        android:contentDescription="@string/custom_play_pause_image" />
-</RelativeLayout>
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@id/exo_play_pause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingEnd="8dp"
+            android:adjustViewBounds="false"
+            android:contentDescription="@string/custom_play_pause_image"
+            android:src="@drawable/exo_styled_controls_play" />
+
+        <ImageView
+            android:id="@id/exo_rew"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="false"
+            android:contentDescription="@string/custom_play_pause_image"
+            android:src="@drawable/exo_styled_controls_rewind" />
+
+    </LinearLayout>
+
+    <com.google.android.exoplayer2.ui.DefaultTimeBar
+        android:id="@+id/exo_progress_placeholder"
+        android:layout_width="58dp"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        app:played_color="@android:color/white"
+        app:unplayed_color="@android:color/darker_gray"
+        app:scrubber_color="@android:color/black"
+        app:scrubber_disabled_size="1dp"
+        app:scrubber_enabled_size="1dp"
+        app:show_buffering="when_playing"
+        android:visibility="invisible"
+        tools:visibility="visible" />
+</LinearLayout>
