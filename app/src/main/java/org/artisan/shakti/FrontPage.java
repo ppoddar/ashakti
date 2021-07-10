@@ -8,11 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+
 import org.artisan.shakti.model.Poet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class FrontPage extends BaseFragment {
+public class FrontPage extends Fragment {
     Language language;
     Poet     poet;
 
@@ -45,8 +47,8 @@ public class FrontPage extends BaseFragment {
         lifetime.setText(poet.lifetime);
         name.setTypeface(font);
         lifetime.setTypeface(font);
-
     }
+
 
     @NotNull
     public String toString() {

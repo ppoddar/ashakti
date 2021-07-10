@@ -14,34 +14,35 @@ import org.jetbrains.annotations.NotNull;
  * An adapter that supplies the pages specific to a language.
  */
 public class PoemViewAdapter extends FragmentStateAdapter {
-     ShaktiApplication app;
-     PoemFactory factory;
-     int pageCount;
+     private final ShaktiApplication app;
+     private final PoemFactory factory;
+     private final Language language;
+     private final Typeface font;
      private static final String TAG = PoemViewAdapter.class.getSimpleName();
 
-    public PoemViewAdapter(@NonNull FragmentActivity activity) {
+    public PoemViewAdapter(@NonNull FragmentActivity activity,
+                           @NotNull ShaktiApplication app,
+                           Language lang) {
         super(activity);
-        Log.e(TAG, "<init> " + activity);
+        Log.e(TAG, "<init> " + " language: " + lang);
+        this.app = app;
+        this.language = lang;
+        this.font     = app.getModel().getFont(this.language);
+        factory = new PoemFactory(this.font, this.language,
+                app.getModel().getPoemCount() +2);
     }
+
 
     /**
-     * Initializes a view adapter. The {@link FragmentStateAdapter#createFragment(int)}
-     * is delegated to a {@link PoemFactory factory}. The factory is also initialized.
-     *
-     * @param app an application
-     * @param lang a language. The associated factory is specific to language
+     * creates a fragment. The current language and font is used to configure
+     * the fragment.
+     * @param position the position
+     * @return a fragment for the poem or the fornt and back page
      */
-    public void init(@NotNull ShaktiApplication app, Language lang) {
-        this.app = app;
-        Typeface font = app.getModel().getFont(lang);
-        pageCount = app.getModel().getPoemCount()+1;// the 0-th page is the the front page
-        factory   = new PoemFactory(lang, font, pageCount);
-    }
-
     @NotNull
     @Override
+
     public Fragment createFragment(int position) {
-        Log.e(TAG, "createFragment() position="+position);
         return factory.createPoem(app.getModel(), position);
     }
 
@@ -52,8 +53,6 @@ public class PoemViewAdapter extends FragmentStateAdapter {
      */
     @Override
     public int getItemCount() {
-        return pageCount;
+        return factory.getSize();
     }
-
-
 }

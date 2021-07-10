@@ -24,15 +24,6 @@
         android:orientation="vertical"
         android:scrollHorizontally="true">
 
-        <TextView
-            android:id="@+id/english_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="english_title"
-            android:ellipsize="end"
-            android:textColor="@color/color_0"
-            android:textStyle="bold"
-            tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/bangla_title"
@@ -43,6 +34,17 @@
             android:maxLines="1"
             android:textColor="@color/color_0"
             tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/english_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="english_title"
+            android:ellipsize="end"
+            android:textColor="@color/color_0"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
+
     </LinearLayout>
 
 

@@ -1,32 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- declares the buttons in a toolbar -->
+<!-- declares the menu in a toolbar -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
-    <item
-        android:id="@+id/action_table_of_content"
-        android:icon="@drawable/toc"
-        android:title="@string/label_table_of_content"
-        android:tooltipText="list of poems"
-        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_switch_language"
         android:icon="@drawable/translate"
         android:title="@string/label_switch_language"
         android:tooltipText="translate"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/action_table_of_content"
+        android:icon="@drawable/toc"
+        android:title="@string/label_table_of_content"
+        android:tooltipText="list of poems"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/share"
+        android:title="@string/label_share"
+        android:tooltipText="share"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/action_biography"
         android:title="@string/action_biography"
-        android:tooltipText="Biography"
         app:showAsAction="never"/>
     <item
         android:id="@+id/action_about"
         android:title="@string/action_about"
-        android:tooltipText="Biography"
         app:showAsAction="never"/>
+
 
 </menu>

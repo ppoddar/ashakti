@@ -6,14 +6,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
-    android:id="@+id/main_toolbar"
+    android:id="@+id/toolbar_toc"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:elevation="4dp"
     android:layout_alignParentTop="true"
     android:theme="@style/AppTheme"
-    app:navigationIcon="@drawable/logo"
-    app:title="@string/app_name"
-    app:menu="@menu/menu_main"/>
-
-<!--     android:background="?attr/colorPrimary"  -->
+    app:title="Poems"
+    app:navigationIcon="@drawable/logo" />

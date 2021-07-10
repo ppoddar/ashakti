@@ -11,7 +11,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.exoplayer2.ui.StyledPlayerControlView;
 
@@ -29,73 +28,26 @@ import org.artisan.shakti.model.TOCEntry;
  *
  */
 public class TOCActivity extends AppCompatActivity {
-    public static final String TAG = TOCActivity.class.getSimpleName();
-
+    //public static final String TAG = TOCActivity.class.getSimpleName();
+    private Model model;
+    private ListView list;
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_toc);
-        setToolbar();
-
         ShaktiApplication app = (ShaktiApplication) getApplication();
-
-        ListView tocEntries = findViewById(R.id.toc_entries);
-        TOCAdapter adapter = new TOCAdapter(app.getModel(), tocEntries);
-        tocEntries.setAdapter(adapter);
+        this.model = app.getModel();
+        this.list = findViewById(R.id.toc_entries);
+        TOCAdapter adapter = new TOCAdapter();
+        this.list.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+
+        AudioPlayer.release();
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        //audioPlayer = new AudioPlayer(TOCActivity.this.getApplicationContext());
-    }
-//    @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-//        if (audioPlayer != null) {
-//            audioPlayer.release();
-//            audioPlayer = null;
-//        }
-//    }
-
-    /**
-     * The toolbar for this activity .
-     */
-    @SuppressLint("NonConstantResourceId")
-    void setToolbar() {
-        Toolbar toolbar = findViewById(R.id.main_toolbar);
-        toolbar.inflateMenu(R.menu.menu_toc);
-        toolbar.setOnMenuItemClickListener(item -> {
-            final Context ctx = this.getApplicationContext();
-            switch (item.getItemId()) {
-                case R.id.action_home:
-                    startActivity(new Intent(ctx, MainActivity.class));
-                    break;
-                case R.id.action_biography:
-                    LocalWebActivity.showPage(ctx, "html/biography.html");
-                    break;
-                case R.id.action_about:
-                    LocalWebActivity.showPage(ctx, "html/notes.html");
-                    break;
-            }
-            return true; // the click is handled here itself
-        });
-    }
-
-
 
     // --------------------------------------------------------------
     class TOCAdapter extends BaseAdapter {
-        final Model model;
-        ListView list;
-
-        TOCAdapter(Model model, ListView list) {
-            this.model = model;
-            this.list = list;
-
-        }
 
         @Override
         public int getCount() {
@@ -154,20 +106,9 @@ public class TOCActivity extends AppCompatActivity {
                 View ctl = audioButton.findViewById(R.id.exo_play_pause);
                 ctl.setOnClickListener(v -> player.play());
             } else {
-                audioButton.setVisibility(View.GONE);
+                audioButton.setVisibility(View.INVISIBLE);
             }
-
             return convertView;
         }
     }
 }
-
-
-//    private static final SingularPlayerDispatcher dispatcher
-//            = new SingularPlayerDispatcher();
-//    private static SpannableString underline(final String text) {
-//        SpannableString content = new SpannableString(text);
-//        content.setSpan(new UnderlineSpan(), 0, text.length(), 0);
-//        return content;
-//    }
-

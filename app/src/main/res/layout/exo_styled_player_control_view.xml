@@ -51,6 +51,7 @@
         app:scrubber_disabled_size="1dp"
         app:scrubber_enabled_size="1dp"
         app:show_buffering="when_playing"
+        app:time_bar_min_update_interval="10"
         android:visibility="invisible"
         tools:visibility="visible" />
 </LinearLayout>

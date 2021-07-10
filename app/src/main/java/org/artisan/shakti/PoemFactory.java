@@ -13,19 +13,24 @@ import org.artisan.shakti.model.TOCEntry;
 /**
  * Creates a factory to create {@link PoemFragment}.
  * Maintains a cache of fragments created. A factory creates poems for
- * a language. So there are two factories for a pair of languages.
+ * a language. So there are two caches, one for each language.
  */
 public class PoemFactory {
-    final private Language language;
-    final private Typeface font;
-    final private Fragment[] fragments;
+    private final Fragment[] cache;
+    private final Typeface font;
+    private final Language language;
 
     private static final String TAG = PoemFactory.class.getSimpleName();
 
-    public PoemFactory(Language lang, Typeface font, int n) {
-        fragments = new Fragment[n];
-        language = lang;
+    /**
+     * create a factory
+     * @param n
+     */
+    public PoemFactory(Typeface font, Language language, int n) {
+        Log.e(TAG, "<init> pageCount=" + n + " language " + language);
+        cache = new Fragment[n];
         this.font = font;
+        this.language = language;
     }
 
     /**
@@ -41,26 +46,33 @@ public class PoemFactory {
      * @return a fragment to be viewed in the ViewPager
      */
     public Fragment createPoem(Model model, int position) {
-        Log.d(TAG, "createFragment() Language " + language + " position=" + position);
-        Fragment page = fragments[position];
+        Fragment page = cache[position];
         if (page != null) {
             Log.d(TAG, "createFragment() page " + position + " found in cache");
             return page;
         }
-
+        Log.d(TAG, "createFragment() Language " + language + " position=" + position);
         if (position == 0) {
+            Log.d(TAG, "createFragment() front page " + position + " language " + language);
             page = new FrontPage();
             Poet poet = model.getPoet(language);
-            ((FrontPage)page).init(poet, language);
+            ((FrontPage) page).init(poet, language);
+        } else if (position == cache.length-1) {   // last page
+            Log.d(TAG, "createFragment() last page " + position + " language " + language);
+            page = new LastPage();
+            ((LastPage) page).init(font, language);
         } else {
-            Log.d(TAG, "createFragment() poem " + position + " ");
-            TOCEntry entry = model.getEntry(position-1); // 0-th position is front page
-            Poem poem = language == Language.BANGLA ? entry.bangla : entry.english;
-
+            Log.d(TAG, "createFragment() poem " + position + " language " + language);
             page = new PoemFragment();
+            TOCEntry entry = model.getEntry(position-1); // 0-th position is front page
+            Poem poem = model.getPoem(position-1, language);
             ((PoemFragment)page).init(poem, font, entry.audio);
         }
-        fragments[position] = page;
+        cache[position] = page;
         return page;
+    }
+
+    public int getSize() {
+        return cache.length;
     }
 }

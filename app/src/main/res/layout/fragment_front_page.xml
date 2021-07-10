@@ -1,43 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_activity_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_centerHorizontal="true"
+    android:orientation="vertical"
     android:padding="@dimen/default_padding">
 
-    <include layout="@layout/main_toolbar"/>
-
+    <!-- leaves top margin for the toolbar -->
     <ImageView
         android:id="@+id/logo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="?attr/actionBarSize"
         android:adjustViewBounds="true"
         android:contentDescription="image of Shakti"
         android:src="@drawable/logo"
-        tools:ignore="HardcodedText"
-        android:layout_centerInParent="true"/>
+        tools:ignore="HardcodedText"/>
 
 
     <TextView
         android:id="@+id/label_poet_name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/logo"
-        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
         android:paddingTop="20dp"
-        android:textSize="@dimen/text_h1"
-        android:textStyle="bold"/>
+        android:textSize="@dimen/text_h2"
+        android:hint="Shakti Chattopadhyay"
+        android:textStyle="bold"
+        android:maxLines="1"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/label_poet_life"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/label_poet_name"
-        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:hint="1933-95"
         android:textStyle="bold"
+        tools:ignore="HardcodedText"
         />
 
-</RelativeLayout>
+</LinearLayout>

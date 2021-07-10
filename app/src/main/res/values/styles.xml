@@ -13,7 +13,7 @@
         <item name="android:textStyle">bold</item>
     </style>
     <style name="PoemStyle">
-        <item name="android:textSize">14pt</item>
+        <item name="android:textSize">12pt</item>
         <item name="android:textStyle">normal</item>
     </style>
 
@@ -25,11 +25,11 @@
     </style>
 
     <style name="englishPoemStyle" parent="PoemStyle">
-        <item name="android:fontFamily">@font/robato_slab_medium</item>
+        <item name="android:fontFamily">@font/robotoslab_medium</item>
     </style>
 
     <style name="englishTitleStyle" parent="TitleStyle">
-        <item name="android:fontFamily">@font/robato_slab_medium</item>
+        <item name="android:fontFamily">@font/robotoslab_medium</item>
     </style>
 
 

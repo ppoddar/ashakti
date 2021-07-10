@@ -17,7 +17,7 @@
     "audio": "content/audio"
   },
   "font": {
-    "english": "font/robato_slab_medium.ttf",
+    "english": "font/robotoslab_medium.ttf",
     "bangla" : "font/kalpurush.ttf"
   },
   "poems": [

@@ -18,11 +18,10 @@ import java.util.List;
  * Manages multiple players each play/pause a single stream.
  */
 public class AudioPlayer {
-    private SimpleExoPlayer delegate;
+    private final SimpleExoPlayer delegate;
     final Context ctx;
     final StyledPlayerControlView view;
     final String audio;
-    private MediaItem item;
 
     private static final List<SimpleExoPlayer> _players = new ArrayList<>();
     private static final String TAG = AudioPlayer.class.getSimpleName();
@@ -30,7 +29,7 @@ public class AudioPlayer {
     /**
      * Creates a player.
      * @param ctx a context
-     * @return
+     * @return an audio player to play the given audio
      */
     public static AudioPlayer create(Context ctx, StyledPlayerControlView view, String audio) {
         AudioPlayer player = new AudioPlayer(ctx, view, audio);
@@ -49,7 +48,7 @@ public class AudioPlayer {
         this.view = view;
         this.audio = audio;
         Uri uri = Uri.parse("asset:///" + audio);
-        this.item = new MediaItem.Builder()
+        MediaItem item = new MediaItem.Builder()
                 .setUri(uri)
                 .build();
         delegate = new SimpleExoPlayer.Builder(ctx).build();
@@ -90,14 +89,19 @@ public class AudioPlayer {
         delegate.stop(false);
     }
 
+    /**
+     * Releases all audio players.
+     */
     public static void release() {
         Log.e("AudioPlayer", "release");
         for (SimpleExoPlayer p : _players) {
             p.stop(true);
             p.release();
+            p = null;
         }
     }
 
+    @NotNull
     public String toString() {
         return AudioPlayer.class.getSimpleName() + "@"
                 + Integer.toHexString(this.hashCode());

@@ -6,7 +6,7 @@
     android:orientation="vertical"
     tools:context=".LocalWebActivity">
 
-    <include layout="@layout/main_toolbar"/>
+    <include layout="@layout/toolbar_main"/>
     <WebView
         android:id="@+id/local_web"
         android:layout_width="match_parent"
